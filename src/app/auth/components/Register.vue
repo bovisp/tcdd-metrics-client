@@ -74,16 +74,16 @@ export default {
     }),
     submit () {
       console.log(this.name)
-      // this.register({
-      //     payload: {
-      //         name: this.name,
-      //         email: this.email,
-      //         password: this.password
-      //     },
-      //     context: this
-      // }).then(() => {
-      //     this.$router.replace({ name: 'home' })
-      // })
+      this.register({
+        payload: {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        },
+        context: this
+      }).then(() => {
+        this.$router.replace({ name: 'home' })
+      })
     }
   },
   mounted () {

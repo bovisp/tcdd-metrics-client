@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { routes } from '../app/index'
-
-console.log(routes)
+import { routes } from '../app/index.js'
 
 Vue.use(Router)
 
 const router = new Router({
-  routes: routes
+  routes,
+  mode: 'history'
 })
 
 export default router
