@@ -62,7 +62,7 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      name: null,
+      name: '',
       email: null,
       password: null,
       errors: []

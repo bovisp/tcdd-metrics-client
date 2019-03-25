@@ -2,12 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './vuex'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
- 
-Vue.use(VueAxios, axios)
+import localforage from 'localforage'
 
 Vue.config.productionTip = false
+
+localforage.config({
+  driver: localforage.LOCALSTORAGE,
+  storeName: 'tcdd-metrics'
+})
 
 new Vue({
   router,
