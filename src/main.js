@@ -3,11 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './vuex'
 import axios from 'axios'
-
-Vue.prototype.$http = axios
-Vue.prototype.axios = axios
-
-console.log(router)
+import VueAxios from 'vue-axios'
+ 
+Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false
 

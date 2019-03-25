@@ -73,7 +73,6 @@ export default {
       register: 'auth/register'
     }),
     submit () {
-      console.log(this.name)
       this.register({
         payload: {
           name: this.name,
@@ -85,9 +84,6 @@ export default {
         this.$router.replace({ name: 'home' })
       })
     }
-  },
-  mounted () {
-    console.log('I am register page')
   }
 }
 </script>

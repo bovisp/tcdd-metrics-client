@@ -1,5 +1,3 @@
 import Vue from 'vue'
 
-export const Home = Vue.component('home', require('./Home.vue'))
-
-console.log(Home)
+export const Home = Vue.component('home', require('./Home.vue').default)
