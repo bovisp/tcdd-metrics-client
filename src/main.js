@@ -5,6 +5,7 @@ import store from './vuex'
 import axios from 'axios'
 
 Vue.prototype.$http = axios
+Vue.prototype.axios = axios
 
 console.log(router)
 
