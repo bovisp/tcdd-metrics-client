@@ -6,7 +6,7 @@
 
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" @submit.prevent="submit">
-                        <div class="form-group" v-bind:class="{ 'has-error': errors.name }">
+                        <div class="form-group" :class="{ 'has-error': errors.name }">
                             <label for="name" class="col-md-4 control-label">Name</label>
 
                             <div class="col-md-6">
@@ -18,7 +18,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group" v-bind:class="{ 'has-error': errors.email }">
+                        <div class="form-group" :class="{ 'has-error': errors.email }">
                             <label for="email" class="col-md-4 control-label">Email address</label>
 
                             <div class="col-md-6">
@@ -30,7 +30,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group" v-bind:class="{ 'has-error': errors.password }">
+                        <div class="form-group" :class="{ 'has-error': errors.password }">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
                             <div class="col-md-6">
@@ -62,7 +62,7 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      name: '',
+      name: null,
       email: null,
       password: null,
       errors: []
@@ -72,17 +72,19 @@ export default {
     ...mapActions({
       register: 'auth/register'
     }),
-    submit () {
-      this.register({
+    async submit () {
+      let response = await this.register({
         payload: {
           name: this.name,
           email: this.email,
           password: this.password
         },
         context: this
-      }).then(() => {
-        this.$router.replace({ name: 'home' })
       })
+
+      if (response.status === 200) {
+        this.$router.replace({ name: 'home' })
+      }
     }
   }
 }

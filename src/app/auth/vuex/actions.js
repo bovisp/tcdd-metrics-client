@@ -3,31 +3,46 @@ import { setHttpToken } from '../../../helpers'
 
 axios.defaults.baseURL = 'http://localhost:8000'
 
-export const register = ({ dispatch }, { payload, context }) => {
-  return axios.post('/api/register', payload).then(response => {
-  }).catch(error => {
-    context.errors = error.response.data.errors
-  })
+export const register = async ({ dispatch }, { payload, context }) => {
+  try {
+    let response = await axios.post('/api/register', payload)
+
+    await dispatch('setToken', response.data.meta.token)
+
+    await dispatch('fetchUser')
+
+    return response
+  } catch (e) {
+    context.errors = e.response.data.errors
+
+    return e.response
+  }
 }
 
-export const login = ({ dispatch }, { payload, context }) => {
-  return axios.post('/api/login', payload).then(response => {
-    dispatch('setToken', response.data.meta.token).then(() => {
-      dispatch('fetchUser')
-    })
-  }).catch(error => {
-    context.errors = error.response.data.errors
-  })
+export const login = async ({ dispatch }, { payload, context }) => {
+  try {
+    let response = await axios.post('/api/login', payload)
+
+    await dispatch('setToken', response.data.meta.token)
+
+    await dispatch('fetchUser')
+
+    return response
+  } catch (e) {
+    context.errors = e.response.data.errors
+
+    return e.response
+  }
 }
 
-export const fetchUser = ({ commit }) => {
-  return axios.get('/api/me').then(response => {
-    commit('setAuthenticated', true)
-    commit('setUserData', response.data.data)
-  })
+export const fetchUser = async ({ commit }) => {
+  let response = await axios.get('/api/me')
+
+  await commit('setAuthenticated', true)
+  await commit('setUserData', response.data.data)
 }
 
-export const setToken = ({ commit, dispatch }, token) => {
-  commit('setToken', token)
-  setHttpToken(token)
+export const setToken = async ({ commit, dispatch }, token) => {
+  await commit('setToken', token)
+  await setHttpToken(token)
 }

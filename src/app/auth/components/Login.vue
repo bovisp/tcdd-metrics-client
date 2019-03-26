@@ -8,7 +8,7 @@
                         {{ errors.root }}
                     </div>
                     <form class="form-horizontal" role="form" @submit.prevent="submit">
-                        <div class="form-group" v-bind:class="{ 'has-error': errors.email }">
+                        <div class="form-group" :class="{ 'has-error': errors.email }">
                             <label for="email" class="col-md-4 control-label">Email address</label>
 
                             <div class="col-md-6">
@@ -20,7 +20,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group" v-bind:class="{ 'has-error': errors.password }">
+                        <div class="form-group" :class="{ 'has-error': errors.password }">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
                             <div class="col-md-6">
@@ -63,23 +63,24 @@ export default {
     ...mapActions({
       login: 'auth/login'
     }),
-    submit () {
-      this.login({
+    async submit () {
+      let response = await this.login({
         payload: {
           email: this.email,
           password: this.password
         },
         context: this
-      }).then(() => {
-        localforage.getItem('intended').then((name) => {
-          if (isEmpty(name)) {
-            this.$router.replace({ name: 'home' })
-            return
-          }
-
-          this.$router.replace({ name: name })
-        })
       })
+
+      if (response.status === 200) {
+        let name = await localforage.getItem('intended')
+        if (isEmpty(name)) {
+          this.$router.replace({ name: 'home' })
+          return
+        }
+
+        this.$router.replace({ name })
+      }
     }
   }
 }
