@@ -39,11 +39,16 @@ export const login = async ({ dispatch }, { payload, context }) => {
 }
 
 export const fetchUser = async ({ commit }) => {
-  // console.log(here)
   let response = await axios.get('/api/me')
 
   await commit('setAuthenticated', true)
   await commit('setUserData', response.data.data)
+}
+
+export const logout = async ({ dispatch }) => {
+  return axios.post('/api/logout').then(response => {
+    dispatch('clearAuth')
+  })
 }
 
 export const setToken = async ({ commit, dispatch }, token) => {

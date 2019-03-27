@@ -37,7 +37,7 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="#" >Logout</a>
+                                <a href="#" @click.prevent="signout">Logout</a>
                             </li>
                         </ul>
                     </li>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
@@ -56,6 +56,16 @@ export default {
       user: 'auth/user',
       authenticated: 'auth/authenticated'
     })
+  },
+  methods: {
+      ...mapActions({
+          logout: 'auth/logout'
+      }),
+      signout () {
+          this.logout().then(() => {
+              this.$router.replace({ name: 'home' })
+          })
+      }
   }
 }
 </script>
