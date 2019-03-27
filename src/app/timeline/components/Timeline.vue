@@ -13,7 +13,7 @@ export default {
   },
   mounted () {
     axios.get('/api/timeline').then(response => {
-    
+
     })
   }
 }

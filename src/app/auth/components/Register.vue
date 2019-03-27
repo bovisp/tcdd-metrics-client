@@ -1,59 +1,53 @@
 <template>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+    <section class="section">
+        <div class="columns is-desktop">
+            <div class="column is-one-third is-offset-one-third">
+                <div class="box">
+                    <h2 class="title is-3 has-text-weight-light">
+                    Register
+                    </h2>
 
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" @submit.prevent="submit">
-                        <div class="form-group" :class="{ 'has-error': errors.name }">
-                            <label for="name" class="col-md-4 control-label">Name</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" autofocus v-model="name">
-
-                                <span class="help-block" v-if="errors.name">
+                    <form @submit.prevent="submit">
+                        <div class="field">
+                            <label class="label" for="name">Name</label>
+                            <div class="control">
+                                <input class="input" type="name" id="name" autofocus v-model="name" :class="{ 'is-danger': errors.name }">
+                                <p class="help is-danger" v-if="errors.name">
                                     {{ errors.name[0] }}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="form-group" :class="{ 'has-error': errors.email }">
-                            <label for="email" class="col-md-4 control-label">Email address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="text" class="form-control" v-model="email">
-
-                                <span class="help-block" v-if="errors.email">
+                        <div class="field">
+                            <label class="label" for="email">Email</label>
+                            <div class="control">
+                                <input class="input" type="email" id="email" v-model="email" :class="{ 'is-danger': errors.email }">
+                                <p class="help is-danger" v-if="errors.email">
                                     {{ errors.email[0] }}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="form-group" :class="{ 'has-error': errors.password }">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" v-model="password">
-
-                                <span class="help-block" v-if="errors.password">
+                        <div class="field">
+                            <label class="label" for="password">Password</label>
+                            <div class="control">
+                                <input class="input" type="password" id="password" v-model="password" :class="{ 'is-danger': errors.password }">
+                                <p class="help is-danger" v-if="errors.password">
                                     {{ errors.password[0] }}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Register
-                                </button>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-link">Register</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>

@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './vuex'
 import localforage from 'localforage'
+import './style/navbar.js'
 
 Vue.config.productionTip = false
 

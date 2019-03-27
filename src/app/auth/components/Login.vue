@@ -1,49 +1,49 @@
 <template>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
-                    <div class="alert alert-danger" v-if="errors.root">
-                        {{ errors.root }}
-                    </div>
-                    <form class="form-horizontal" role="form" @submit.prevent="submit">
-                        <div class="form-group" :class="{ 'has-error': errors.email }">
-                            <label for="email" class="col-md-4 control-label">Email address</label>
+    <section class="section">
+        <div class="columns is-desktop">
+            <div class="column is-one-third is-offset-one-third">
+                <div class="box">
+                    <h2 class="title is-3 has-text-weight-light">
+                    Login
+                    </h2>
 
-                            <div class="col-md-6">
-                                <input id="email" type="text" class="form-control" name="email" autofocus v-model="email">
+                    <article class="message is-danger" v-if="errors.root">
+                        <div class="message-body">
+                            {{ errors.root }}
+                        </div>
+                    </article>
 
-                                <span class="help-block" v-if="errors.email">
+                    <form @submit.prevent="submit">
+                        <div class="field">
+                            <label class="label" for="email">Email</label>
+                            <div class="control">
+                                <input class="input" type="email" id="email" autofocus v-model="email" :class="{ 'is-danger': errors.email }">
+                                <p class="help is-danger" v-if="errors.email">
                                     {{ errors.email[0] }}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="form-group" :class="{ 'has-error': errors.password }">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" v-model="password">
-
-                                <span class="help-block" v-if="errors.password">
+                        <div class="field">
+                            <label class="label" for="password">Password</label>
+                            <div class="control">
+                                <input class="input" type="password" id="password" v-model="password" :class="{ 'is-danger': errors.password }">
+                                <p class="help is-danger" v-if="errors.password">
                                     {{ errors.password[0] }}
-                                </span>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Login
-                                </button>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-link">Login</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>

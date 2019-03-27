@@ -1,47 +1,42 @@
 <template>
-  <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Fresh</router-link>
 
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            </a>
+        </div>
 
-                <!-- Branding Image -->
-                <router-link :to="{ name: 'home' }" class="navbar-brand">Fresh</router-link>
-            </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start"></div>
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    &nbsp;
-                </ul>
+            <div class="navbar-end">
+            <template v-if="!authenticated">
+                <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
 
-                <ul class="nav navbar-nav navbar-right" v-if="!authenticated">
-                    <li><router-link :to="{ name: 'login' }">Login</router-link></li>
-                    <li><router-link :to="{ name: 'register' }">Register</router-link></li>
-                </ul>
+                <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right" v-else>
-                    <!-- Authentication Links -->
-                    <li><router-link :to="{ name: 'timeline' }">Timeline</router-link></li>
-                    <li class="dropdown">
-                        <a v-if="user !== null" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                           {{ user.name }}  <span class="caret"></span>
-                        </a>
+            </template>
 
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="#" @click.prevent="signout">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <template v-else>
+                <router-link class="navbar-item" :to="{ name: 'timeline' }">Timeline</router-link>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a v-if="user !== null" class="navbar-link">
+                    {{ user.name }}
+                    </a>
+
+                    <div class="navbar-dropdown is-right">
+                    <a class="navbar-item" @click.prevent="signout">
+                        Logout
+                    </a>
+                    </div>
+                </div>
+            </template>
+
             </div>
         </div>
     </nav>
@@ -58,14 +53,14 @@ export default {
     })
   },
   methods: {
-      ...mapActions({
-          logout: 'auth/logout'
-      }),
-      signout () {
-          this.logout().then(() => {
-              this.$router.replace({ name: 'home' })
-          })
-      }
+    ...mapActions({
+      logout: 'auth/logout'
+    }),
+    signout () {
+      this.logout().then(() => {
+        this.$router.replace({ name: 'home' })
+      })
+    }
   }
 }
 </script>
