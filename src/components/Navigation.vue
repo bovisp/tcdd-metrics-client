@@ -31,7 +31,7 @@
                     <!-- Authentication Links -->
                     <li><router-link :to="{ name: 'timeline' }">Timeline</router-link></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <a v-if="user !== null" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                            {{ user.name }}  <span class="caret"></span>
                         </a>
 

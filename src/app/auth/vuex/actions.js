@@ -26,7 +26,7 @@ export const login = async ({ dispatch }, { payload, context }) => {
     let response = await axios.post('/api/login', payload)
 
     await dispatch('setToken', response.data.meta.token)
-    //console.log('here')
+    // console.log('here')
 
     await dispatch('fetchUser')
 
@@ -39,7 +39,7 @@ export const login = async ({ dispatch }, { payload, context }) => {
 }
 
 export const fetchUser = async ({ commit }) => {
-  //console.log(here)
+  // console.log(here)
   let response = await axios.get('/api/me')
 
   await commit('setAuthenticated', true)
@@ -56,15 +56,16 @@ export const setToken = async ({ commit, dispatch }, token) => {
   await setHttpToken(token)
 }
 
-export const checkTokenExists = async ({ commit, dispatch }, token) => {
+export const checkTokenExists = ({ commit, dispatch }, token) => {
   return localforage.getItem('authtoken').then(token => {
     if (isEmpty(token)) {
-      return Promise.reject('NO_STORAGE_TOKEN')
+      return Promise.reject(new Error('NO_STORAGE_TOKEN'))
     }
     return Promise.resolve(token)
-  }).catch((error) => {
-    console.log(error)
   })
+  // .catch((error) => {
+  //   console.log(error)
+  // })
 }
 
 export const clearAuth = async ({ commit }, token) => {

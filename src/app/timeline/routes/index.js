@@ -6,8 +6,7 @@ export default [
     component: Timeline,
     name: 'timeline',
     meta: {
-      guest: false,
-      needsAuth: false
+      needsAuth: true
     }
   }
 ]
