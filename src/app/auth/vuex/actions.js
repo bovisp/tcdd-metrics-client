@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { setHttpToken } from '../../../helpers'
+import { isEmpty } from 'lodash'
+import localforage from 'localforage'
 
 axios.defaults.baseURL = 'http://localhost:8000'
 
@@ -24,6 +26,7 @@ export const login = async ({ dispatch }, { payload, context }) => {
     let response = await axios.post('/api/login', payload)
 
     await dispatch('setToken', response.data.meta.token)
+    //console.log('here')
 
     await dispatch('fetchUser')
 
@@ -36,6 +39,7 @@ export const login = async ({ dispatch }, { payload, context }) => {
 }
 
 export const fetchUser = async ({ commit }) => {
+  //console.log(here)
   let response = await axios.get('/api/me')
 
   await commit('setAuthenticated', true)
@@ -43,6 +47,29 @@ export const fetchUser = async ({ commit }) => {
 }
 
 export const setToken = async ({ commit, dispatch }, token) => {
+  if (isEmpty(token)) {
+    return dispatch('checkTokenExists').then(token => {
+      setHttpToken(token)
+    })
+  }
   await commit('setToken', token)
   await setHttpToken(token)
+}
+
+export const checkTokenExists = async ({ commit, dispatch }, token) => {
+  return localforage.getItem('authtoken').then(token => {
+    if (isEmpty(token)) {
+      return Promise.reject('NO_STORAGE_TOKEN')
+    }
+    return Promise.resolve(token)
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
+export const clearAuth = async ({ commit }, token) => {
+  commit('setAuthenticated', false)
+  commit('setUserData', null)
+  commit('setToken', null)
+  setHttpToken(null)
 }

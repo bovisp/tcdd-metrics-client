@@ -3,7 +3,6 @@ import { isEmpty } from 'lodash'
 
 export const setHttpToken = token => {
   if (isEmpty(token)) {
-    // can access axios here?
     axios.defaults.headers.common['Authorization'] = null
     return
   }

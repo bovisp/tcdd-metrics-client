@@ -11,6 +11,13 @@ localforage.config({
   storeName: 'tcdd-metrics'
 })
 
+store.dispatch('auth/setToken').then(() => {
+  store.dispatch('auth/fetchUser').catch(() => {
+    store.dispatch('auth/clearAuth')
+    router.replace({ name: 'login' })
+  })
+})
+
 new Vue({
   router,
   store,
