@@ -74,6 +74,7 @@ export default {
 
       if (response.status === 200) {
         let name = await localforage.getItem('intended')
+        localforage.removeItem('intended')
         if (isEmpty(name)) {
           this.$router.replace({ name: 'home' })
           return

@@ -24,6 +24,8 @@
             <template v-else>
                 <router-link class="navbar-item" :to="{ name: 'timeline' }">Timeline</router-link>
 
+                <router-link class="navbar-item" :to="{ name: 'index' }">Index</router-link>
+
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a v-if="user !== null" class="navbar-link">
                     {{ user.name }}

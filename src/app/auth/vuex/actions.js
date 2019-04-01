@@ -26,7 +26,6 @@ export const login = async ({ dispatch }, { payload, context }) => {
     let response = await axios.post('/api/login', payload)
 
     await dispatch('setToken', response.data.meta.token)
-    // console.log('here')
 
     await dispatch('fetchUser')
 
