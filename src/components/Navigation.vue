@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Fresh</router-link>
+            <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Home</router-link>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
