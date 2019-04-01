@@ -6,13 +6,10 @@ import router from './router'
 import store from './vuex'
 import localforage from 'localforage'
 import './style/navbar.js'
-import vSelect from './components/Select.vue'
 
 Vue.config.productionTip = false
 
 Vue.use(Buefy)
-
-Vue.component('v-select', vSelect)
 
 localforage.config({
   driver: localforage.LOCALSTORAGE,

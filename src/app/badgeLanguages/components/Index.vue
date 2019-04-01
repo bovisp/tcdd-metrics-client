@@ -1,5 +1,9 @@
 <template>
-  <b-table :data="data" :columns="columns"></b-table>
+  <div class="columns is-desktop">
+    <div class="column is-half is-offset-one-quarter">
+      <b-table :data="data" :columns="columns"></b-table>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -40,7 +44,6 @@ export default {
   mounted () {
     axios.get('/api/badge-languages').then(response => {
       this.data = response.data
-      console.log(response.data)
     })
   }
 }
