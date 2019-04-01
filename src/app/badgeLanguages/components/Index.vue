@@ -1,7 +1,7 @@
 <template>
   <div class="columns is-desktop">
     <div class="column is-half is-offset-one-quarter">
-      <b-table :data="data" :columns="columns"></b-table>
+      <b-table :data="data" :columns="columns" :striped="true"></b-table>
     </div>
   </div>
 </template>
