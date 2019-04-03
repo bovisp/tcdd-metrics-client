@@ -3,6 +3,9 @@
     <div class="column is-half is-offset-one-quarter">
       <b-table :data="data" :columns="columns" :striped="true"></b-table>
     </div>
+    <div class="column is-one-quarter">
+      <router-link :to="{ name: 'create' }" class="button is-link">Create</router-link>
+    </div>
   </div>
 </template>
 
