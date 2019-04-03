@@ -21,22 +21,12 @@ export default {
           numeric: true
         },
         {
-          field: 'created_at',
-          label: 'Created At'
+          field: 'badge_name',
+          label: 'Badge'
         },
         {
-          field: 'updated_at',
-          label: 'Updated At'
-        },
-        {
-          field: 'badge_id',
-          label: 'Badge Id',
-          numeric: true
-        },
-        {
-          field: 'language_id',
-          label: 'Language Id',
-          numeric: true
+          field: 'language_name',
+          label: 'Language'
         }
       ]
     }
