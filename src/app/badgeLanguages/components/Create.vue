@@ -4,13 +4,29 @@
       <div class="field">
         <label class="label">Language</label>
         <div class="control">
-          <vSelect label="name" min-width=160px v-model="selectedLanguage" :options="languages"></vSelect>
+          <!-- <vSelect label="name" min-width=160px v-model="selectedLanguage" :options="languages"></vSelect> -->
+          <b-select v-model="selectedLanguage" placeholder="Select a language">
+                <option
+                    v-for="language in languages"
+                    :value="language"
+                    :key="language.id">
+                    {{ language.name }}
+                </option>
+          </b-select>
         </div>
       </div>
       <div class="field">
         <label class="label">Badge</label>
         <div class="control">
-          <vSelect label="name" v-model="selectedBadge" :options="badges"></vSelect>
+          <!-- <vSelect label="name" v-model="selectedBadge" :options="badges"></vSelect> -->
+          <b-select v-model="selectedBadge" placeholder="Select a badge">
+                <option
+                    v-for="badge in badges"
+                    :value="badge"
+                    :key="badge.id">
+                    {{ badge.name }}
+                </option>
+          </b-select>
         </div>
       </div>
       <div class="field">
@@ -45,6 +61,7 @@ export default {
   },
   methods: {
     submit (e) {
+      console.log(this.selectedBadge)
       if (!this.selectedLanguage || !this.selectedBadge) {
         this.toast('dark', 'Please select a badge and a language.')
       } else {
