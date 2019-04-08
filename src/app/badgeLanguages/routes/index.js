@@ -10,7 +10,7 @@ export default [
     }
   },
   {
-    path: '/badge-languages',
+    path: '/',
     component: BadgeLanguages,
     name: 'badgeLanguages',
     meta: {

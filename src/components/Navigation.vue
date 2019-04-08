@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Home</router-link>
+            <!-- <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Home</router-link> -->
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
@@ -22,7 +22,7 @@
             </template>
 
             <template v-else>
-                <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
+                <!-- <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link> -->
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a v-if="user !== null" class="navbar-link">

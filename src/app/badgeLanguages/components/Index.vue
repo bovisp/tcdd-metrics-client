@@ -1,12 +1,14 @@
 <template>
-  <div class="columns is-desktop">
-    <div class="column is-half is-offset-one-quarter">
-      <b-table :data="data" :columns="columns" :striped="true"></b-table>
+  <section>
+    <div class="columns is-desktop">
+      <div class="column is-half is-offset-one-quarter">
+        <div class="flex my-4">
+          <router-link :to="{ name: 'create' }" class="button is-link ml-auto">Create</router-link>
+        </div>
+        <b-table :data="data" :columns="columns" :striped="true"></b-table>
+      </div>
     </div>
-    <div class="column is-one-quarter">
-      <router-link :to="{ name: 'create' }" class="button is-link">Create</router-link>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -17,12 +19,6 @@ export default {
     return {
       data: [],
       columns: [
-        {
-          field: 'id',
-          label: 'ID',
-          width: '40',
-          numeric: true
-        },
         {
           field: 'badge_name',
           label: 'Badge'
