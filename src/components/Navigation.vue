@@ -11,31 +11,33 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start"></div>
+            <div class="navbar-start">
+              <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
+            </div>
 
             <div class="navbar-end">
-            <template v-if="!authenticated">
-                <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
+              <template v-if="!authenticated">
+                  <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
 
-                <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
+                  <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
 
-            </template>
+              </template>
 
-            <template v-else>
-                <!-- <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link> -->
+              <template v-else>
+                  <!-- <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link> -->
 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a v-if="user !== null" class="navbar-link">
-                    {{ user.name }}
-                    </a>
+                  <div class="navbar-item has-dropdown is-hoverable">
+                      <a v-if="user !== null" class="navbar-link">
+                      {{ user.name }}
+                      </a>
 
-                    <div class="navbar-dropdown is-right">
-                    <a class="navbar-item" @click.prevent="signout">
-                        Logout
-                    </a>
-                    </div>
-                </div>
-            </template>
+                      <div class="navbar-dropdown is-right">
+                      <a class="navbar-item" @click.prevent="signout">
+                          Logout
+                      </a>
+                      </div>
+                  </div>
+              </template>
 
             </div>
         </div>

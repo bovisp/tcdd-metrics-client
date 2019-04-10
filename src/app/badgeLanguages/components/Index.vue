@@ -4,10 +4,10 @@
     <!-- index table -->
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
-        <div v-if="selected.badge_id == null">
-        <b-message title="Info" type="is-info">
-            Please select a badge to update or delete its language.
-        </b-message>
+        <div v-if="selected.badge_id == null" class="my-4">
+          <b-message title="Info" type="is-info">
+              Please select a badge to update or delete its language.
+          </b-message>
         </div>
         <div class="is-flex my-4">
           <router-link :to="{ name: 'create' }" class="button is-link ml-auto">Create</router-link>
@@ -18,12 +18,16 @@
 
     <!-- edit/delete footer -->
     <div class="fixed-bottom has-background-white-ter" v-if="selected.badge_id != null">
-        <div class="column is-half is-offset-one-quarter is-flex">
-          <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
-            @click="isUpdateModalActive = true, openModal()"
-            :disabled="!selected.badge_id">Edit</button>
-          <button class="button is-danger" @click="confirm" style="margin-right: 1rem;">Delete</button>
-          <button class="button is-info" @click="selected = {}">Clear Selected</button>
+        <div class="container">
+          <div class="columns">
+            <div class="column is-half is-offset-one-quarter is-flex">
+              <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
+                @click="isUpdateModalActive = true, openModal()"
+                :disabled="!selected.badge_id">Edit</button>
+              <button class="button is-danger" @click="confirm" style="margin-right: 1rem;">Delete</button>
+              <button class="button is-text" @click="selected = {}">Clear Selected</button>
+            </div>
+          </div>
         </div>
     </div>
 
@@ -109,6 +113,7 @@ export default {
     confirm () {
       this.$dialog.confirm({
         message: 'Do you really want to delete this badge\'s language?',
+        type: 'is-danger',
         onConfirm: () => {
           if (!this.selected.id) {
             this.toast('dark', 'Please select a badge.')
@@ -116,11 +121,11 @@ export default {
             axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
               this.toast('success', response.data)
               this.init()
-              this.selected = {};
+              this.selected = {}
             }).catch(error => {
-              this.$dialog.confirm({
+              this.$dialog.alert({
                 message: error.response.data,
-                onConfirm: () => {}
+                type: 'is-danger'
               })
             })
           }
@@ -138,6 +143,7 @@ export default {
           setTimeout((function () {
             this.init()
             this.isUpdateModalActive = false
+            this.selected = {}
           }.bind(this)), 1000)
         }).catch(error => {
           this.snackbar('warning', error.response.data)
