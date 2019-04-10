@@ -21,8 +21,9 @@
         <div class="column is-half is-offset-one-quarter is-flex">
           <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
             @click="isUpdateModalActive = true, openModal()"
-          :disabled="!selected.badge_id">Edit</button>
-          <button class="button is-danger" @click="confirm">Delete</button>
+            :disabled="!selected.badge_id">Edit</button>
+          <button class="button is-danger" @click="confirm" style="margin-right: 1rem;">Delete</button>
+          <button class="button is-info" @click="selected = {}">Clear Selected</button>
         </div>
     </div>
 
@@ -88,11 +89,14 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/badge-languages').then(response => {
-      this.data = response.data
-    })
+    this.init()
   },
   methods: {
+    init () {
+      axios.get('/api/badge-languages').then(response => {
+        this.data = response.data
+      })
+    },
     openModal () {
       axios.get('/api/languages').then(response => {
         this.languages = response.data
@@ -106,11 +110,13 @@ export default {
       this.$dialog.confirm({
         message: 'Do you really want to delete this badge\'s language?',
         onConfirm: () => {
-          if (!this.selected) {
+          if (!this.selected.id) {
             this.toast('dark', 'Please select a badge.')
           } else {
             axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
               this.toast('success', response.data)
+              this.init()
+              this.selected = {};
             }).catch(error => {
               this.$dialog.confirm({
                 message: error.response.data,
@@ -130,6 +136,7 @@ export default {
         axios.put('/api/badge-languages/' + this.selected.id, this.submitData).then(response => {
           this.toast('success', response.data)
           setTimeout((function () {
+            this.init()
             this.isUpdateModalActive = false
           }.bind(this)), 1000)
         }).catch(error => {
