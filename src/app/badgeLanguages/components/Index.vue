@@ -111,10 +111,11 @@ export default {
           } else {
             axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
               this.toast('success', response.data)
-              setTimeout(function () {
-              }, 1000)
             }).catch(error => {
-              this.toast('danger', error.response.data.message)
+              this.$dialog.confirm({
+                message: error.response.data,
+                onConfirm: () => {}
+              })
             })
           }
         }
@@ -132,12 +133,21 @@ export default {
             this.isUpdateModalActive = false
           }.bind(this)), 1000)
         }).catch(error => {
-          this.toast('danger', error.response.data.message)
+          this.snackbar('warning', error.response.data)
+          setTimeout((function () {
+            this.isUpdateModalActive = false
+          }.bind(this)), 1000)
         })
       }
     },
     toast (type = 'dark', message) {
       this.$toast.open({
+        type: `is-${type}`,
+        message
+      })
+    },
+    snackbar (type = 'dark', message) {
+      this.$snackbar.open({
         type: `is-${type}`,
         message
       })
