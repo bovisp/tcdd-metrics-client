@@ -20,12 +20,12 @@
         <div class="control">
           <!-- <vSelect label="name" min-width=160px v-model="selectedLanguage" :options="languages"></vSelect> -->
           <b-select v-model="selectedLanguage" placeholder="Select a language">
-                <option
-                    v-for="language in languages"
-                    :value="language"
-                    :key="language.id">
-                    {{ language.name }}
-                </option>
+            <option
+              v-for="language in languages"
+              :value="language"
+              :key="language.id">
+              {{ language.name }}
+            </option>
           </b-select>
         </div>
       </div>
@@ -35,13 +35,11 @@
         </div>
       </div>
     </form>
-
   </section>
 </template>
 
 <script>
 import axios from 'axios'
-import vSelect from 'vue-select'
 
 export default {
   data () {
@@ -56,9 +54,7 @@ export default {
       selectedBadge: null
     }
   },
-  components: {
-    vSelect
-  },
+
   methods: {
     submit (e) {
       if (!this.selectedLanguage || !this.selectedBadge) {

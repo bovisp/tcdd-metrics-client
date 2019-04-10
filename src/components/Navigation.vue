@@ -58,7 +58,7 @@ export default {
     }),
     signout () {
       this.logout().then(() => {
-        this.$router.replace({ name: 'home' })
+        this.$router.replace({ name: '/' })
       })
     }
   }

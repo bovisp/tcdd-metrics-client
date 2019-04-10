@@ -7,57 +7,55 @@
         <div v-if="selected.badge_id == null">
         <b-message title="Info" type="is-info">
             Please select a badge to update or delete its language.
-          </b-message>
-          </div>
+        </b-message>
+        </div>
         <div class="is-flex my-4">
           <router-link :to="{ name: 'create' }" class="button is-link ml-auto">Create</router-link>
         </div>
-        <b-table :data="data" :columns="columns" :selected.sync="selected" :striped="true">
-
-        </b-table>
-        
+        <b-table :data="data" :columns="columns" :selected.sync="selected" :striped="true"></b-table>
       </div>
-      
     </div>
 
-
-
     <!-- edit/delete footer -->
-
     <div class="fixed-bottom has-background-white-ter" v-if="selected.badge_id != null">
         <div class="column is-half is-offset-one-quarter is-flex">
           <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
-          @click="isUpdateModalActive = true, openModal()"
-      :disabled="!selected.badge_id">Edit</button>
-      
-      <button class="button is-danger" @click="confirm">Delete</button>
+            @click="isUpdateModalActive = true, openModal()"
+          :disabled="!selected.badge_id">Edit</button>
+          <button class="button is-danger" @click="confirm">Delete</button>
         </div>
-  </div>
+    </div>
 
     <!-- edit modal -->
-
     <b-modal :active.sync="isUpdateModalActive" :width="640" scroll="keep">
-            <form v-on:submit.prevent="submit">
-      <div class="field">
-        <label class="label">Badge</label>
-        <p>{{ selected.badge_name }}</p>
-      </div>
-      <div class="field">
-        <label class="label">Language</label>
-        <div class="control">
-          <b-select v-model="selectedLanguage">
-                <option
+      <div class="card">
+        <div class="card-content">
+          <form v-on:submit.prevent="submit">
+            <div class="field">
+              <label class="label">Badge</label>
+              <p>{{ selected.badge_name }}</p>
+            </div>
+            <div class="field">
+              <label class="label">Language</label>
+              <div class="control">
+                <b-select v-model="selectedLanguage">
+                  <option
                     v-for="language in languages"
                     :value="language"
                     :key="language.id">
                     {{ language.name }}
-                </option>
-          </b-select>
+                  </option>
+                </b-select>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-link">Update</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-
-
-    </form>
     </b-modal>
   </section>
 </template>
@@ -104,23 +102,23 @@ export default {
         name: this.selected.language_name
       }
     },
-    confirm() {
-        this.$dialog.confirm({
-            message: 'Do you really want to delete this badge\'s language?',
-            onConfirm: () => {
-              if (!this.selected) {
-                this.toast('dark', 'Please select a badge.')
-              } else {
-                axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
-                  this.toast('success', response.data)
-                  setTimeout((function () {
-                  }.bind(this)), 1000)
-                }).catch(error => {
-                  this.toast('danger', error.response.data.message)
-                })
-              }
-            }
-        })
+    confirm () {
+      this.$dialog.confirm({
+        message: 'Do you really want to delete this badge\'s language?',
+        onConfirm: () => {
+          if (!this.selected) {
+            this.toast('dark', 'Please select a badge.')
+          } else {
+            axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
+              this.toast('success', response.data)
+              setTimeout(function () {
+              }, 1000)
+            }).catch(error => {
+              this.toast('danger', error.response.data.message)
+            })
+          }
+        }
+      })
     },
     submit (e) {
       if (!this.selectedLanguage) {
