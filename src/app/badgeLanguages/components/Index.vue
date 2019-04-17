@@ -166,9 +166,8 @@ export default {
       axios.put(`/api/badge-languages/${this.selected.id}?confirm=false`, this.submitData).then(response => {
         this.toast('success', response.data)
         setTimeout((function () {
-          this.init()
+          this.refreshTable()
           this.isUpdateModalActive = false
-          this.selected = {}
         }.bind(this)), 1000)
       }).catch(error => {
         if (error.response.status === 422) {
@@ -185,21 +184,19 @@ export default {
         onConfirm: () => {
           if (!this.selected.id) {
             this.toast('dark', 'Please select a badge.')
-          } else {
-            axios.put(`/api/badge-languages/${this.selected.id}?confirm=true`, this.submitData).then(response => {
-              this.toast('success', response.data)
-              setTimeout((function () {
-                this.init()
-                this.isUpdateModalActive = false
-                this.selected = {}
-              }.bind(this)), 1000)
-            }).catch(error => {
-              this.$dialog.alert({
-                message: error.response.data,
-                type: 'is-danger'
-              })
-            })
           }
+          axios.put(`/api/badge-languages/${this.selected.id}?confirm=true`, this.submitData).then(response => {
+            this.toast('success', response.data)
+            setTimeout((function () {
+              this.refreshTable()
+              this.isUpdateModalActive = false
+            }.bind(this)), 1000)
+          }).catch(error => {
+            this.$dialog.alert({
+              message: error.response.data,
+              type: 'is-danger'
+            })
+          })
         }
       })
     },
