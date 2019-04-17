@@ -31,6 +31,9 @@
               </b-select>
             </div>
           </div>
+          <br>
+          <br>
+          <br><br><br>
           <div class="field">
             <div class="control">
               <button class="button is-link">Submit</button>

@@ -4,7 +4,7 @@
     <!-- index table -->
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
-        <div v-if="selected.badge_id == null" class="my-4">
+        <div class="my-4">
           <b-message title="Info" type="is-info">
               Please select a badge to update or delete its language.
           </b-message>
@@ -24,7 +24,7 @@
               <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
                 @click="isUpdateModalActive = true, openModal()"
                 :disabled="!selected.badge_id">Edit</button>
-              <button class="button is-danger" @click="confirm" style="margin-right: 1rem;">Delete</button>
+              <button class="button is-danger" @click="confirmDelete" style="margin-right: 1rem;">Delete</button>
               <button class="button is-text" @click="selected = {}">Clear Selected</button>
             </div>
           </div>
@@ -110,18 +110,89 @@ export default {
         name: this.selected.language_name
       }
     },
-    confirm () {
+    refreshTable () {
+      this.init()
+      this.selected = {}
+    },
+    confirmDelete () {
       this.$dialog.confirm({
         message: 'Do you really want to delete this badge\'s language?',
         type: 'is-danger',
         onConfirm: () => {
           if (!this.selected.id) {
             this.toast('dark', 'Please select a badge.')
+            return
+          }
+          axios.delete(`/api/badge-languages/${this.selected.id}?confirm=false`).then(response => {
+            this.toast('success', response.data)
+            this.refreshTable()
+          }).catch(error => {
+            if (error.response.status === 422) {
+              this.confirmDeleteIfBadgeIssued(error)
+              return
+            }
+            this.$dialog.alert({
+              message: error.response.data,
+              type: 'is-danger'
+            })
+          })
+        }
+      })
+    },
+    confirmDeleteIfBadgeIssued (error) {
+      this.$dialog.confirm({
+        message: error.response.data + ' Do you really want to delete this badge\'s language?',
+        type: 'is-danger',
+        onConfirm: () => {
+          axios.delete(`/api/badge-languages/${this.selected.id}?confirm=true`).then(response => {
+            this.toast('success', response.data)
+            this.refreshTable()
+          }).catch(error => {
+            this.$dialog.alert({
+              message: error.response.data,
+              type: 'is-danger'
+            })
+          })
+        }
+      })
+    },
+    submit (e) {
+      if (!this.selectedLanguage) {
+        this.toast('dark', 'Please select a language.')
+        return
+      }
+      this.submitData.badge_id = this.selected.badge_id
+      this.submitData.language_id = this.selectedLanguage.id
+      axios.put(`/api/badge-languages/${this.selected.id}?confirm=false`, this.submitData).then(response => {
+        this.toast('success', response.data)
+        setTimeout((function () {
+          this.init()
+          this.isUpdateModalActive = false
+          this.selected = {}
+        }.bind(this)), 1000)
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.updateIfBadgeIssued(error)
+          return
+        }
+        this.snackbar('warning', error.response.data)
+      })
+    },
+    updateIfBadgeIssued (error) {
+      this.$dialog.confirm({
+        message: error.response.data + ' Do you really want to update this badge\'s language?',
+        type: 'is-danger',
+        onConfirm: () => {
+          if (!this.selected.id) {
+            this.toast('dark', 'Please select a badge.')
           } else {
-            axios.delete('/api/badge-languages/' + this.selected.id).then(response => {
+            axios.put(`/api/badge-languages/${this.selected.id}?confirm=true`, this.submitData).then(response => {
               this.toast('success', response.data)
-              this.init()
-              this.selected = {}
+              setTimeout((function () {
+                this.init()
+                this.isUpdateModalActive = false
+                this.selected = {}
+              }.bind(this)), 1000)
             }).catch(error => {
               this.$dialog.alert({
                 message: error.response.data,
@@ -131,27 +202,6 @@ export default {
           }
         }
       })
-    },
-    submit (e) {
-      if (!this.selectedLanguage) {
-        this.toast('dark', 'Please select a language.')
-      } else {
-        this.submitData.badge_id = this.selected.badge_id
-        this.submitData.language_id = this.selectedLanguage.id
-        axios.put('/api/badge-languages/' + this.selected.id, this.submitData).then(response => {
-          this.toast('success', response.data)
-          setTimeout((function () {
-            this.init()
-            this.isUpdateModalActive = false
-            this.selected = {}
-          }.bind(this)), 1000)
-        }).catch(error => {
-          this.snackbar('warning', error.response.data)
-          setTimeout((function () {
-            this.isUpdateModalActive = false
-          }.bind(this)), 1000)
-        })
-      }
     },
     toast (type = 'dark', message) {
       this.$toast.open({
