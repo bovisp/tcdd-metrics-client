@@ -118,25 +118,26 @@ export default {
       this.$dialog.confirm({
         message: 'Do you really want to delete this badge\'s language?',
         type: 'is-danger',
-        onConfirm: () => {
-          if (!this.selected.id) {
-            this.toast('dark', 'Please select a badge.')
-            return
-          }
-          axios.delete(`/api/badge-languages/${this.selected.id}?confirm=false`).then(response => {
-            this.toast('success', response.data)
-            this.refreshTable()
-          }).catch(error => {
-            if (error.response.status === 422) {
-              this.confirmDeleteIfBadgeIssued(error)
-              return
-            }
-            this.$dialog.alert({
-              message: error.response.data,
-              type: 'is-danger'
-            })
-          })
+        onConfirm: () => this.deleteOnConfirm()
+      })
+    },
+    deleteOnConfirm() {
+      if (!this.selected.id) {
+        this.toast('dark', 'Please select a badge.')
+        return
+      }
+      axios.delete(`/api/badge-languages/${this.selected.id}?confirm=false`).then(response => {
+        this.toast('success', response.data)
+        this.refreshTable()
+      }).catch(error => {
+        if (error.response.status === 422) {
+          this.confirmDeleteIfBadgeIssued(error)
+          return
         }
+        this.$dialog.alert({
+          message: error.response.data,
+          type: 'is-danger'
+        })
       })
     },
     confirmDeleteIfBadgeIssued (error) {
