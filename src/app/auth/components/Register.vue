@@ -77,7 +77,7 @@ export default {
       })
 
       if (response.status === 200) {
-        this.$router.replace({ name: 'badgeLanguages' })
+        this.$router.replace({ name: '/' })
       }
     }
   }

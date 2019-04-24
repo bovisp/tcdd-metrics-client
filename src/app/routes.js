@@ -3,5 +3,6 @@ import home from './home/routes'
 import timeline from './timeline/routes'
 import errors from './errors/routes'
 import badgeLanguages from './badgeLanguages/routes'
+import courseLanguages from './courseLanguages/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...timeline, ...errors]
+export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...timeline, ...errors]

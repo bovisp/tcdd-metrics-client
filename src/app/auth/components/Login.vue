@@ -76,7 +76,7 @@ export default {
         let name = await localforage.getItem('intended')
         localforage.removeItem('intended')
         if (isEmpty(name)) {
-          this.$router.replace({ name: 'badgeLanguages' })
+          this.$router.replace({ name: '/' })
           return
         }
         this.$router.replace({ name })

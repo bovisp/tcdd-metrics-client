@@ -4,15 +4,15 @@
       <div class="column is-half is-offset-one-quarter">
         <form v-on:submit.prevent="submit">
           <div class="field">
-            <label class="label">Badge</label>
+            <label class="label">Course</label>
             <div class="control">
-              <!-- <vSelect label="name" v-model="selectedBadge" :options="badges"></vSelect> -->
-              <b-select v-model="selectedBadge" placeholder="Select a badge">
+              <!-- <vSelect label="name" v-model="selectedCourse" :options="courses"></vSelect> -->
+              <b-select v-model="selectedCourse" placeholder="Select a course">
                     <option
-                        v-for="badge in badges"
-                        :value="badge"
-                        :key="badge.id">
-                        {{ badge.name }}
+                        v-for="course in courses"
+                        :value="course"
+                        :key="course.id">
+                        {{ course.fullname }}
                     </option>
               </b-select>
             </div>
@@ -49,28 +49,28 @@ export default {
   data () {
     return {
       languages: [],
-      badges: [],
+      courses: [],
       submitData: {
-        badge_id: null,
+        course_id: null,
         language_id: null
       },
       selectedLanguage: null,
-      selectedBadge: null
+      selectedCourse: null
     }
   },
 
   methods: {
     submit (e) {
-      if (!this.selectedLanguage || !this.selectedBadge) {
-        this.toast('dark', 'Please select a badge and a language.')
+      if (!this.selectedLanguage || !this.selectedCourse) {
+        this.toast('dark', 'Please select a course and a language.')
       } else {
-        this.submitData.badge_id = this.selectedBadge.id
+        this.submitData.course_id = this.selectedCourse.id
         this.submitData.language_id = this.selectedLanguage.id
-        axios.post('/api/badge-languages', this.submitData).then(response => {
+        axios.post('/api/course-languages', this.submitData).then(response => {
           this.toast('success', response.data)
 
           setTimeout((function () {
-            this.$router.replace({ name: 'badgeLanguages' })
+            this.$router.replace({ name: 'courseLanguages' })
           }.bind(this)), 1000)
         }).catch(error => {
           this.toast('danger', error.response.data.message)
@@ -88,8 +88,8 @@ export default {
     axios.get('/api/languages').then(response => {
       this.languages = response.data
     })
-    axios.get('/api/badges').then(response => {
-      this.badges = response.data
+    axios.get('/api/courses').then(response => {
+      this.courses = response.data
     })
   }
 }

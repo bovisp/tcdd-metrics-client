@@ -1,16 +1,16 @@
-import { Create, BadgeLanguages } from '../components'
+import { CreateBadgeLanguage, BadgeLanguages } from '../components'
 
 export default [
   {
     path: '/badge-languages/create',
-    component: Create,
-    name: 'create',
+    component: CreateBadgeLanguage,
+    name: 'createBadgeLanguage',
     meta: {
       needsAuth: true
     }
   },
   {
-    path: '/',
+    path: '/badge-languages',
     component: BadgeLanguages,
     name: 'badgeLanguages',
     meta: {
