@@ -82,7 +82,7 @@ export default {
       selectedLanguage: null,
       columns: [
         {
-          field: 'course_name',
+          field: 'fullname',
           label: 'Course'
         },
         {
