@@ -88,7 +88,7 @@ export default {
     axios.get('/api/languages').then(response => {
       this.languages = response.data
     })
-    axios.get('/api/courses').then(response => {
+    axios.get('/api/courses/?filter=notinclang').then(response => {
       this.courses = response.data
     })
   }

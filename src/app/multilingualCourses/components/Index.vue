@@ -6,11 +6,11 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select a course to update or delete its language.
+              Please select a course to update or delete its multilingual course group.
           </b-message>
         </div>
         <div class="is-flex my-4">
-          <router-link :to="{ name: 'createCourseLanguage' }" class="button is-link ml-auto">Create</router-link>
+          <router-link :to="{ name: 'createMultilingualCourse' }" class="button is-link ml-auto">Create</router-link>
         </div>
         <b-table :data="data" :columns="columns" :selected.sync="selected" :striped="true"></b-table>
       </div>
@@ -41,14 +41,14 @@
               <p>{{ selected.fullname }}</p>
             </div>
             <div class="field">
-              <label class="label">Language</label>
+              <label class="label">Course Group</label>
               <div class="control">
-                <b-select v-model="selectedLanguage">
+                <b-select v-model="selectedCourseGroup.id">
                   <option
-                    v-for="language in languages"
-                    :value="language"
-                    :key="language.id">
-                    {{ language.name }}
+                    v-for="courseGroup in courseGroups"
+                    :value="courseGroup.id"
+                    :key="courseGroup.id">
+                    {{ courseGroup.id }}
                   </option>
                 </b-select>
               </div>
@@ -72,22 +72,22 @@ export default {
   data () {
     return {
       isUpdateModalActive: false,
-      languages: [],
+      courseGroups: [],
       data: [],
       selected: {},
       submitData: {
         course_id: null,
-        language_id: null
+        multilingual_course_group_id: null
       },
-      selectedLanguage: null,
+      selectedCourseGroup: { id: null },
       columns: [
         {
           field: 'fullname',
           label: 'Course'
         },
         {
-          field: 'language_name',
-          label: 'Language'
+          field: 'multilingual_course_group_id',
+          label: 'Group Id'
         }
       ]
     }
@@ -97,19 +97,18 @@ export default {
   },
   methods: {
     init () {
-      axios.get('/api/course-languages').then(response => {
+      axios.get('/api/multilingual-courses').then(response => {
         this.data = response.data
       })
     },
     openModal () {
-      axios.get('/api/languages').then(response => {
-        this.languages = response.data
+      axios.get('/api/multilingual-course-groups').then(response => {
+        this.courseGroups = response.data
       })
-      this.selectedLanguage = {
-        id: this.selected.language_id,
-        name: this.selected.language_name
+      this.selectedCourseGroup = {
+        id: this.selected.multilingual_course_group_id,
+        name: this.selected.course_group_name
       }
-      console.log(this.selectedLanguage)
     },
     refreshTable () {
       this.init()
@@ -117,7 +116,7 @@ export default {
     },
     confirmDelete () {
       this.$dialog.confirm({
-        message: 'Do you really want to delete this course\'s language?',
+        message: 'Do you really want to delete this multilingual course?',
         type: 'is-danger',
         onConfirm: () => this.deleteOnConfirm()
       })
@@ -127,7 +126,7 @@ export default {
         this.toast('dark', 'Please select a course.')
         return
       }
-      axios.delete(`/api/course-languages/${this.selected.id}`).then(response => {
+      axios.delete(`/api/multilingual-courses/${this.selected.id}`).then(response => {
         this.toast('success', response.data)
         this.refreshTable()
       }).catch(error => {
@@ -138,13 +137,13 @@ export default {
       })
     },
     submit (e) {
-      if (!this.selectedLanguage) {
-        this.toast('dark', 'Please select a language.')
+      if (!this.selectedCourseGroup) {
+        this.toast('dark', 'Please select a course group.')
         return
       }
       this.submitData.course_id = this.selected.course_id
-      this.submitData.language_id = this.selectedLanguage.id
-      axios.put(`/api/course-languages/${this.selected.id}`, this.submitData).then(response => {
+      this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
+      axios.put(`/api/multilingual-courses/${this.selected.id}`, this.submitData).then(response => {
         this.toast('success', response.data)
         setTimeout((function () {
           this.refreshTable()
