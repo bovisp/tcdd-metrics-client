@@ -6,7 +6,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select a course to update or delete its multilingual course group.
+              Please select a multilingual course to update or delete its course group.
           </b-message>
         </div>
         <div class="is-flex my-4">
