@@ -53,28 +53,36 @@ export default {
         this.toast('dark', 'Please select at least two courses.')
         return
       }
-      // first post
+      await this.postFirstSelectedCourse()
+      await this.postOtherSelectedCourses()
+    },
+    async postFirstSelectedCourse () {
       this.submitData.course_id = this.selectedCourses[0].id
       try {
         let firstResponse = await axios.post('/api/multilingual-courses', this.submitData)
-        this.submitData.multilingual_course_group_id = firstResponse.data.multilingual_course_group_id
+        this.submitData.multilingual_course_group_id = firstResponse.data.multilingual_course_group_id // set group id for subsequent course post requests
       } catch (error) {
         this.toast('danger', error.response.data.message)
       }
-      // subsequent posts, including groupid in request
-      let subsequentResponse
+    },
+    async postOtherSelectedCourses () {
       try {
-        for (let i = 1; i < this.selectedCourses.length; i++) {
-          this.submitData.course_id = this.selectedCourses[i].id
-          subsequentResponse = await axios.post('/api/multilingual-courses', this.submitData)
-        }
-        this.toast('success', subsequentResponse.data.message)
+        let message = await this.postEachAdditionalCourse()
+        this.toast('success', message)
         setTimeout((function () {
           this.$router.replace({ name: 'multilingualCourses' })
         }.bind(this)), 1000)
       } catch (error) {
         this.toast('danger', error.response.data.message)
       }
+    },
+    async postEachAdditionalCourse () {
+      let subsequentResponse
+      for (let i = 1; i < this.selectedCourses.length; i++) {
+        this.submitData.course_id = this.selectedCourses[i].id
+        subsequentResponse = await axios.post('/api/multilingual-courses', this.submitData)
+      }
+      return subsequentResponse.data.message
     },
     toast (type = 'dark', message) {
       this.$toast.open({

@@ -185,6 +185,7 @@ export default {
         onConfirm: () => {
           if (!this.selected.id) {
             this.toast('dark', 'Please select a badge.')
+            return
           }
           axios.put(`/api/badge-languages/${this.selected.id}?confirm=true`, this.submitData).then(response => {
             this.toast('success', response.data)

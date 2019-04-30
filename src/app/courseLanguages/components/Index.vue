@@ -109,7 +109,6 @@ export default {
         id: this.selected.language_id,
         name: this.selected.language_name
       }
-      console.log(this.selectedLanguage)
     },
     refreshTable () {
       this.init()

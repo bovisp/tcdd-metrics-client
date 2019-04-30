@@ -6,21 +6,19 @@
           <div class="field">
             <label class="label">Course</label>
             <div class="control">
-              <!-- <vSelect label="name" v-model="selectedCourse" :options="courses"></vSelect> -->
               <b-select v-model="selectedCourse" placeholder="Select a course">
-                    <option
-                        v-for="course in courses"
-                        :value="course"
-                        :key="course.id">
-                        {{ course.fullname }}
-                    </option>
+                <option
+                  v-for="course in courses"
+                  :value="course"
+                  :key="course.id">
+                  {{ course.fullname }}
+                </option>
               </b-select>
             </div>
           </div>
           <div class="field">
             <label class="label">Language</label>
             <div class="control">
-              <!-- <vSelect label="name" min-width=160px v-model="selectedLanguage" :options="languages"></vSelect> -->
               <b-select v-model="selectedLanguage" placeholder="Select a language">
                 <option
                   v-for="language in languages"
@@ -63,19 +61,18 @@ export default {
     submit (e) {
       if (!this.selectedLanguage || !this.selectedCourse) {
         this.toast('dark', 'Please select a course and a language.')
-      } else {
-        this.submitData.course_id = this.selectedCourse.id
-        this.submitData.language_id = this.selectedLanguage.id
-        axios.post('/api/course-languages', this.submitData).then(response => {
-          this.toast('success', response.data)
-
-          setTimeout((function () {
-            this.$router.replace({ name: 'courseLanguages' })
-          }.bind(this)), 1000)
-        }).catch(error => {
-          this.toast('danger', error.response.data.message)
-        })
+        return
       }
+      this.submitData.course_id = this.selectedCourse.id
+      this.submitData.language_id = this.selectedLanguage.id
+      axios.post('/api/course-languages', this.submitData).then(response => {
+        this.toast('success', response.data)
+        setTimeout((function () {
+          this.$router.replace({ name: 'courseLanguages' })
+        }.bind(this)), 1000)
+      }).catch(error => {
+        this.toast('danger', error.response.data.message)
+      })
     },
     toast (type = 'dark', message) {
       this.$toast.open({
