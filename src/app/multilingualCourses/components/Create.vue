@@ -92,8 +92,8 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/courses/?filter=notinmlang').then(firstResponse => {
-      this.courses = firstResponse.data
+    axios.get('/api/courses/?filter=notinmlang').then(response => {
+      this.courses = response.data
     })
   }
 }

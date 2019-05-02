@@ -5,6 +5,6 @@ import errors from './errors/routes'
 import badgeLanguages from './badgeLanguages/routes'
 import courseLanguages from './courseLanguages/routes'
 import multilingualCourses from './multilingualCourses/routes'
-import generateReport from './generateReport/routes'
+import reports from './reports/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...generateReport, ...timeline, ...errors]
+export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...timeline, ...errors]
