@@ -86,8 +86,9 @@ export default {
           label: 'Course'
         },
         {
-          field: 'multilingual_course_group_id',
-          label: 'Group Id'
+          field: 'course_group_name',
+          label: 'Group Name',
+          width: 150
         }
       ]
     }

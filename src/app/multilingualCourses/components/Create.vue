@@ -4,21 +4,28 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select two or more courses to create a course group.
+              Please select two or more courses and a course group name.
           </b-message>
         </div>
         <form v-on:submit.prevent="submit">
           <div class="field">
-            <label class="label">Courses</label>
             <div class="control">
-              <b-select multiple  native-size="7" v-model="selectedCourses" placeholder="Select a course">
-                <option
-                  v-for="course in courses"
-                  :value="course"
-                  :key="course.id">
-                  {{ course.fullname }}
-                </option>
-              </b-select>
+              <b-field label="Courses">
+                <b-select multiple  native-size="7" v-model="selectedCourses" placeholder="Select courses">
+                  <option
+                    v-for="course in courses"
+                    :value="course"
+                    :key="course.id">
+                    {{ course.fullname }}
+                  </option>
+                </b-select>
+              </b-field>
+              <b-field label="Course Group Name">
+                <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
+                  <!-- <p class="help is-danger" v-if="errors.email">
+                      {{ errors.email[0] }} :class="{ 'is-danger':  }"
+                  </p> -->
+              </b-field>
             </div>
           </div>
           <div class="field">
@@ -41,9 +48,11 @@ export default {
       courses: [],
       submitData: {
         course_id: null,
-        multilingual_course_group_id: null
+        multilingual_course_group_id: null,
+        course_group_name: ''
       },
-      selectedCourses: []
+      selectedCourses: [],
+      courseGroupName: ''
     }
   },
 
@@ -58,6 +67,7 @@ export default {
     },
     async postFirstSelectedCourse () {
       this.submitData.course_id = this.selectedCourses[0].id
+      this.submitData.course_group_name = this.courseGroupName
       try {
         let firstResponse = await axios.post('/api/multilingual-courses', this.submitData)
         this.submitData.multilingual_course_group_id = firstResponse.data.multilingual_course_group_id // set group id for subsequent course post requests
