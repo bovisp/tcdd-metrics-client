@@ -6,7 +6,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select a multilingual course to update or delete its course group.
+              Please select a course to update or delete its course group.
           </b-message>
         </div>
         <div class="is-flex my-4">
@@ -48,7 +48,7 @@
                     v-for="courseGroup in courseGroups"
                     :value="courseGroup.id"
                     :key="courseGroup.id">
-                    {{ courseGroup.id }}
+                    {{ courseGroup.name }}
                   </option>
                 </b-select>
               </div>

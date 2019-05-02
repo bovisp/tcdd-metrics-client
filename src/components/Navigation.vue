@@ -14,7 +14,7 @@
             <div class="navbar-start">
               <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
               <router-link class="navbar-item" :to="{ name: 'courseLanguages' }">Course Languages</router-link>
-              <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }">Multilingual Courses</router-link>
+              <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }">Course Groups</router-link>
               <router-link class="navbar-item" :to="{ name: 'reports' }">Generate Report</router-link>
             </div>
 

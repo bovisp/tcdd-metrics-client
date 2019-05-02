@@ -4,29 +4,29 @@
       <div class="column is-half is-offset-one-quarter">
         <form v-on:submit.prevent="submit">
           <div class="field">
-            <label class="label">Course</label>
-            <div class="control">
-              <b-select v-model="selectedCourse" placeholder="Select a course">
-                <option
-                  v-for="course in courses"
-                  :value="course"
-                  :key="course.id">
-                  {{ course.fullname }}
-                </option>
-              </b-select>
-            </div>
+            <b-field label="Course">
+              <b-autocomplete
+                v-model="name"
+                placeholder="Select a course..."
+                openOnFocus
+                :data="filteredDataObj"
+                field="fullname"
+                @select="option => selectedCourse = option">
+              </b-autocomplete>
+            </b-field>
           </div>
           <div class="field">
-            <label class="label">Language</label>
             <div class="control">
-              <b-select v-model="selectedLanguage" placeholder="Select a language">
-                <option
-                  v-for="language in languages"
-                  :value="language"
-                  :key="language.id">
-                  {{ language.name }}
-                </option>
-              </b-select>
+              <b-field label="Language">
+                <b-autocomplete
+                  v-model="language"
+                  placeholder="Select a language..."
+                  openOnFocus
+                  :data="filteredLanguages"
+                  field="name"
+                  @select="option => selectedLanguage = option">
+                </b-autocomplete>
+              </b-field>
             </div>
           </div>
           <div class="field">
@@ -53,10 +53,29 @@ export default {
         language_id: null
       },
       selectedLanguage: null,
-      selectedCourse: null
+      selectedCourse: null,
+      name: '',
+      language: ''
     }
   },
-
+  computed: {
+    filteredDataObj () {
+      return this.courses.filter((course) => {
+        return course.fullname
+          .toString()
+          .toLowerCase()
+          .indexOf(this.name.toLowerCase()) >= 0
+      })
+    },
+    filteredLanguages () {
+      return this.languages.filter((language) => {
+        return language.name
+          .toString()
+          .toLowerCase()
+          .indexOf(this.language.toLowerCase()) >= 0
+      })
+    }
+  },
   methods: {
     submit (e) {
       if (!this.selectedLanguage || !this.selectedCourse) {

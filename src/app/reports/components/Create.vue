@@ -13,6 +13,7 @@
               <b-field label="Start date">
                 <b-datepicker
                   v-model="startDate"
+                  :max-date="maxDate"
                   placeholder="Click to select..."
                   icon="calendar-today">
                 </b-datepicker>
@@ -69,25 +70,32 @@ export default {
         startDate: null,
         endDate: null
       },
-      selectedReports: []
+      selectedReports: [],
+      maxDate: new Date()
     }
   },
 
   methods: {
     async submit (e) {
-      if (!this.selectedReports || !this.startDate || !this.endDate) {
+      if (!this.selectedReports.length || !this.startDate || !this.endDate) {
         this.toast('dark', 'Please select a start date, end date and report.')
+        return
+      }
+      if (this.startDate > this.endDate) {
+        this.toast('dark', 'The start date must be before the end date.')
         return
       }
       this.submitData.reportIds = this.selectedReports.map(r => r.id)
       this.submitData.startDate = this.startDate
       this.submitData.endDate = this.endDate
+      const loadingComponent = this.$loading.open()
       try {
         let response = await axios.post('/api/reports', this.submitData)
         this.toast('success', response.data)
       } catch (error) {
         this.toast('danger', error.response.data.message)
       }
+      loadingComponent.close()
     },
     toast (type = 'dark', message) {
       this.$toast.open({
