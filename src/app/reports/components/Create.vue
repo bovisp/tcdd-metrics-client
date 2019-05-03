@@ -25,6 +25,7 @@
               <b-field label="End date">
                 <b-datepicker
                   v-model="endDate"
+                  :max-date="maxDate"
                   placeholder="Click to select..."
                   icon="calendar-today">
                 </b-datepicker>
@@ -71,12 +72,21 @@ export default {
         endDate: null
       },
       selectedReports: [],
-      maxDate: new Date()
+      maxDate: new Date(),
+      minDates: []
     }
   },
 
   methods: {
     async submit (e) {
+      // foreach selectedReport, if datepicker end date is before min date with key = selectedReport's id, error msg
+      let invalidEndDate = false
+      this.selectedReports.forEach(r => {
+        let reportMinDate = this.minDates.filter(d => d[r.id])[0]
+        if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { this.toast('dark', `Error: end date is before minimum date for ${r.name}.`) }
+        invalidEndDate = true
+      })
+      if (invalidEndDate === true) { return }
       if (!this.selectedReports.length || !this.startDate || !this.endDate) {
         this.toast('dark', 'Please select a start date, end date and report.')
         return
@@ -107,6 +117,12 @@ export default {
   mounted () {
     axios.get('/api/reports').then(response => {
       this.reports = response.data
+    })
+    axios.get('api/reports/minDateTimestamps').then(response => {
+      this.minDates = response.data.map(d => {
+        d[Object.keys(d)[0]] = new Date(d[Object.keys(d)[0]] * 1000) // multiplies timestamp by 1000 for milliseconds and converts to date
+        return d
+      })
     })
   }
 }

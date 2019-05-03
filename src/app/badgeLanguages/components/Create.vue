@@ -8,7 +8,7 @@
               <b-field label="Badge">
                 <b-autocomplete
                   v-model="name"
-                  placeholder="Select a badge"
+                  placeholder="Select a badge..."
                   openOnFocus
                   :data="filteredDataObj"
                   field="name"
