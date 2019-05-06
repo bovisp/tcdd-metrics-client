@@ -13,6 +13,7 @@
               <b-field label="Start date">
                 <b-datepicker
                   v-model="startDate"
+                  :minDate="minDate"
                   :max-date="maxDate"
                   placeholder="Click to select..."
                   icon="calendar-today">
@@ -25,6 +26,7 @@
               <b-field label="End date">
                 <b-datepicker
                   v-model="endDate"
+                  :minDate="minDate"
                   :max-date="maxDate"
                   placeholder="Click to select..."
                   icon="calendar-today">
@@ -59,6 +61,7 @@
 
 <script>
 import axios from 'axios'
+import { pull } from 'lodash'
 
 export default {
   data () {
@@ -72,21 +75,14 @@ export default {
         endDate: null
       },
       selectedReports: [],
-      maxDate: new Date(),
+      maxDate: null,
+      minDate: null,
       minDates: []
     }
   },
 
   methods: {
-    async submit (e) {
-      // foreach selectedReport, if datepicker end date is before min date with key = selectedReport's id, error msg
-      let invalidEndDate = false
-      this.selectedReports.forEach(r => {
-        let reportMinDate = this.minDates.filter(d => d[r.id])[0]
-        if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { this.toast('dark', `Error: end date is before minimum date for ${r.name}.`) }
-        invalidEndDate = true
-      })
-      if (invalidEndDate === true) { return }
+    submit (e) {
       if (!this.selectedReports.length || !this.startDate || !this.endDate) {
         this.toast('dark', 'Please select a start date, end date and report.')
         return
@@ -95,9 +91,47 @@ export default {
         this.toast('dark', 'The start date must be before the end date.')
         return
       }
+      this.generateValidReports()
+    },
+    generateValidReports () {
+      let reportsToRemove = []
+      //do not ask to continue if all reports are invalid
+      for (const report of this.selectedReports) {
+        let reportMinDate = this.minDates.filter(d => d[report.id])[0]
+        if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { // gets value of first key
+          reportsToRemove.push(report)
+        }
+      }
+      let reportMessage = ''
+      if (reportsToRemove.length > 0) {
+        for (const reportToRemove of reportsToRemove) {
+          pull(this.selectedReports, reportToRemove)
+          if (reportsToRemove.indexOf(reportToRemove) === reportsToRemove.length - 1) {
+            if (reportsToRemove.length === 1) {
+              reportMessage += ' ' + reportToRemove.name
+              continue
+            }
+            reportMessage += ' and ' + reportToRemove.name
+            continue
+          }
+          reportMessage += ' ' + reportToRemove.name + ','
+        }
+        this.$dialog.confirm({
+          message: `Selected end date is before the minimum date for${reportMessage}. These reports will not be included. Continue without those reports?`,
+          type: 'is-danger',
+          onConfirm: () => {
+            this.generateReport()
+          }
+        })
+        return
+      }
+      this.generateReport()
+    },
+    async generateReport () {
       this.submitData.reportIds = this.selectedReports.map(r => r.id)
       this.submitData.startDate = this.startDate
       this.submitData.endDate = this.endDate
+
       const loadingComponent = this.$loading.open()
       try {
         let response = await axios.post('/api/reports', this.submitData)
@@ -106,6 +140,11 @@ export default {
         this.toast('danger', error.response.data.message)
       }
       loadingComponent.close()
+      this.refreshForm()
+    },
+    refreshForm () {
+      this.selectedReports = []
+      this.reportsToRemove = []
     },
     toast (type = 'dark', message) {
       this.$toast.open({
@@ -115,6 +154,7 @@ export default {
     }
   },
   mounted () {
+    this.maxDate = new Date()
     axios.get('/api/reports').then(response => {
       this.reports = response.data
     })
@@ -124,6 +164,9 @@ export default {
         return d
       })
     })
+    // set min date for date picker to min of minDates
+    let reportMinDate = this.minDates.filter(d => d[report.id])[0]
+    let reportMinDate = reportMinDate[Object.keys(reportMinDate)[0]]
   }
 }
 </script>
