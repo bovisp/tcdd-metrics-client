@@ -95,9 +95,9 @@ export default {
     },
     generateValidReports () {
       let reportsToRemove = []
-      //do not ask to continue if all reports are invalid
       for (const report of this.selectedReports) {
         let reportMinDate = this.minDates.filter(d => d[report.id])[0]
+        console.log(reportMinDate)
         if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { // gets value of first key
           reportsToRemove.push(report)
         }
@@ -158,15 +158,15 @@ export default {
     axios.get('/api/reports').then(response => {
       this.reports = response.data
     })
+    // send mindates over in same object as reports
     axios.get('api/reports/minDateTimestamps').then(response => {
+      let minDateVals = response.data.map(d => d[Object.keys(d)[0]])
+      this.minDate = new Date(Math.min(...minDateVals) * 1000) // multiplies timestamp by 1000 for milliseconds and converts to date
       this.minDates = response.data.map(d => {
-        d[Object.keys(d)[0]] = new Date(d[Object.keys(d)[0]] * 1000) // multiplies timestamp by 1000 for milliseconds and converts to date
+        d[Object.keys(d)[0]] = new Date(d[Object.keys(d)[0]] * 1000)
         return d
       })
     })
-    // set min date for date picker to min of minDates
-    let reportMinDate = this.minDates.filter(d => d[report.id])[0]
-    let reportMinDate = reportMinDate[Object.keys(reportMinDate)[0]]
   }
 }
 </script>
