@@ -11,15 +11,18 @@
           <div class="field">
             <div class="control">
               <b-field label="Courses">
+                <input class="input" placeholder="Search..." id="searchCourses" autofocus v-model="name">
+              </b-field>
                 <b-select multiple  native-size="7" v-model="selectedCourses" placeholder="Select courses">
                   <option
-                    v-for="course in courses"
+                    v-for="course in filteredDataObj"
                     :value="course"
                     :key="course.id">
                     {{ course.fullname }}
                   </option>
                 </b-select>
-              </b-field>
+            </div>
+            <div class="control">
               <b-field label="Course Group Name">
                 <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
                   <!-- <p class="help is-danger" v-if="errors.email">
@@ -52,10 +55,20 @@ export default {
         course_group_name: ''
       },
       selectedCourses: [],
-      courseGroupName: ''
+      courseGroupName: '',
+      name: ''
     }
   },
-
+  computed: {
+    filteredDataObj () {
+      return this.courses.filter(course => {
+        return course.fullname
+          .toString()
+          .toLowerCase()
+          .indexOf(this.name.toLowerCase()) >= 0
+      })
+    }
+  },
   methods: {
     async submit (e) {
       if (!this.selectedCourses || this.selectedCourses.length < 2) {
