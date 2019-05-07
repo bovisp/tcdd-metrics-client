@@ -11,23 +11,38 @@
           <div class="field">
             <div class="control">
               <b-field label="Courses">
-                <input class="input" placeholder="Search..." id="searchCourses" autofocus v-model="name">
+                <b-input icon="magnify" placeholder="Search..." id="searchCourses" autofocus v-model="name"></b-input>
               </b-field>
-                <b-select multiple  native-size="7" v-model="selectedCourses" placeholder="Select courses">
-                  <option
-                    v-for="course in filteredDataObj"
-                    :value="course"
-                    :key="course.id">
-                    {{ course.fullname }}
-                  </option>
-                </b-select>
+              <!-- <b-select multiple  native-size="7" v-model="selectedCourses" @click.native="changed" placeholder="Select courses">
+                <option
+                  v-for="course in filteredDataObj"
+                  :value="course.id"
+                  :key="course.id">
+                  {{ course.fullname }}
+                </option>
+              </b-select> -->
+              <!-- <select multiple size="7" name="" id="" v-model="selectedCourses" @click="changed">
+                <option v-for="course in filteredDataObj" :value="course.id" :key="course.id">{{ course.fullname }}</option>
+              </select> -->
+
+              <b-table
+                :data="filteredDataObj"
+                :columns="columns"
+                :checked-rows.sync="selectedCourses"
+                paginated
+                per-page="10"
+                pagination-simple
+                checkable>
+
+                <template slot="bottom-left">
+                  <b>Total checked</b>: {{ selectedCourses.length }}
+                </template>
+              </b-table>
+
             </div>
             <div class="control">
               <b-field label="Course Group Name">
                 <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
-                  <!-- <p class="help is-danger" v-if="errors.email">
-                      {{ errors.email[0] }} :class="{ 'is-danger':  }"
-                  </p> -->
               </b-field>
             </div>
           </div>
@@ -56,20 +71,31 @@ export default {
       },
       selectedCourses: [],
       courseGroupName: '',
-      name: ''
+      name: '',
+      testArray: [],
+      columns: [
+        {
+          field: 'fullname',
+          label: 'Course'
+        }
+      ]
     }
   },
   computed: {
     filteredDataObj () {
       return this.courses.filter(course => {
         return course.fullname
-          .toString()
           .toLowerCase()
-          .indexOf(this.name.toLowerCase()) >= 0
+          .includes(this.name.toLowerCase())
+          // .indexOf(this.name.toLowerCase()) >= 0
       })
     }
   },
   methods: {
+    changed (e) {
+      console.log(e)
+      this.testArray.push(e.target.value)
+    },
     async submit (e) {
       if (!this.selectedCourses || this.selectedCourses.length < 2) {
         this.toast('dark', 'Please select at least two courses.')

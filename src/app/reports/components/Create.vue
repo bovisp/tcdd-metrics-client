@@ -154,7 +154,6 @@ export default {
     }
   },
   mounted () {
-    this.maxDate = new Date()
     axios.get('/api/reports').then(response => {
       this.reports = response.data
     })
@@ -162,6 +161,9 @@ export default {
     axios.get('api/reports/minDateTimestamps').then(response => {
       let minDateVals = response.data.map(d => d[Object.keys(d)[0]])
       this.minDate = new Date(Math.min(...minDateVals) * 1000) // multiplies timestamp by 1000 for milliseconds and converts to date
+      this.startDate = this.minDate
+      this.maxDate = new Date()
+      this.endDate = this.maxDate
       this.minDates = response.data.map(d => {
         d[Object.keys(d)[0]] = new Date(d[Object.keys(d)[0]] * 1000)
         return d

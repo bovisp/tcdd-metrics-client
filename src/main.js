@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
+import VeeValidate from 'vee-validate'
 import 'buefy/dist/buefy.css'
 import App from './App.vue'
 import router from './router'
@@ -10,6 +11,7 @@ import './style/navbar.js'
 Vue.config.productionTip = false
 
 Vue.use(Buefy)
+Vue.use(VeeValidate)
 
 localforage.config({
   driver: localforage.LOCALSTORAGE,
