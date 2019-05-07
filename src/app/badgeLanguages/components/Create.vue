@@ -124,7 +124,7 @@ export default {
         this.submitData.badge_id = this.selectedBadges[i].id
         response = await axios.post('/api/badge-languages', this.submitData)
       }
-      return response.data.message
+      return response.data
     },
     toast (type = 'dark', message) {
       this.$toast.open({

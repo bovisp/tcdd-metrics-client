@@ -6,24 +6,29 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select a course to update or delete its course group.
+              Please select a course group to update or delete it.
           </b-message>
         </div>
+        <form v-on:submit.prevent="create">
         <div class="is-flex my-4">
-          <router-link :to="{ name: 'createMultilingualCourse' }" class="button is-link ml-auto">Create</router-link>
+            <b-field label="Course Group Name">
+            <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
+            </b-field>
+          <button class="button is-link">Create</button>
         </div>
+        </form>
         <b-table :data="data" :columns="columns" :selected.sync="selected" :striped="true"></b-table>
       </div>
     </div>
 
     <!-- edit/delete footer -->
-    <div class="fixed-bottom has-background-white-ter" v-if="selected.course_id != null">
+    <div class="fixed-bottom has-background-white-ter" v-if="selected.id != null">
         <div class="container">
           <div class="columns">
             <div class="column is-half is-offset-one-quarter is-flex">
               <button class="button is-link" style="margin-left: auto; margin-right: 1rem;"
                 @click="isUpdateModalActive = true, openModal()"
-                :disabled="!selected.course_id">Edit</button>
+                :disabled="!selected.id">Edit</button>
               <button class="button is-danger" @click="confirmDelete" style="margin-right: 1rem;">Delete</button>
               <button class="button is-text" @click="selected = {}">Clear Selected</button>
             </div>
@@ -37,20 +42,15 @@
         <div class="card-content">
           <form v-on:submit.prevent="submit">
             <div class="field">
-              <label class="label">Course</label>
-              <p>{{ selected.fullname }}</p>
+              <label class="label">Course Group</label>
+              <p>{{ selected.name }}</p>
             </div>
             <div class="field">
-              <label class="label">Course Group</label>
+              <label class="label">Course Group Name</label>
               <div class="control">
-                <b-select v-model="selectedCourseGroup.id">
-                  <option
-                    v-for="courseGroup in courseGroups"
-                    :value="courseGroup.id"
-                    :key="courseGroup.id">
-                    {{ courseGroup.name }}
-                  </option>
-                </b-select>
+                <b-field label="Course Group Name">
+                    <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
+                </b-field>
               </div>
             </div>
             <div class="field">
@@ -73,6 +73,7 @@ export default {
     return {
       isUpdateModalActive: false,
       courseGroups: [],
+      courseGroupName: '',
       data: [],
       selected: {},
       submitData: {
@@ -82,13 +83,8 @@ export default {
       selectedCourseGroup: { id: null },
       columns: [
         {
-          field: 'fullname',
-          label: 'Course'
-        },
-        {
-          field: 'course_group_name',
-          label: 'Group Name',
-          width: 150
+          field: 'name',
+          label: 'Course Group'
         }
       ]
     }
@@ -98,7 +94,7 @@ export default {
   },
   methods: {
     init () {
-      axios.get('/api/multilingual-courses').then(response => {
+      axios.get('/api/multilingual-course-groups').then(response => {
         this.data = response.data
       })
     },
@@ -136,6 +132,13 @@ export default {
           type: 'is-danger'
         })
       })
+    },
+    create () {
+        if (!this.courseGroupName) {
+            this.toast('dark', 'Please enter a course group name.')
+        return
+        }
+
     },
     submit (e) {
       if (!this.selectedCourseGroup) {

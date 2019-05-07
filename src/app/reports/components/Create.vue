@@ -117,7 +117,7 @@ export default {
           reportMessage += ' ' + reportToRemove.name + ','
         }
         this.$dialog.confirm({
-          message: `Selected end date is before the minimum date for${reportMessage}. These reports will not be included. Continue without those reports?`,
+          message: `Selected end date is before the minimum date for${reportMessage}. These reports will not be included. Continue?`,
           type: 'is-danger',
           onConfirm: () => {
             this.generateReport()

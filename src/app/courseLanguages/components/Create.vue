@@ -5,15 +5,36 @@
         <form v-on:submit.prevent="submit">
           <div class="field">
             <b-field label="Course">
-              <b-autocomplete
+              <b-input icon="magnify"
+                placeholder="Search..." 
+                id="searchBadges" 
+                autofocus 
+                v-model="name" 
+                @keyup.native.esc="name=''"></b-input>
+
+              <!-- <b-autocomplete
                 v-model="name"
                 placeholder="Select a course..."
                 openOnFocus
                 :data="filteredDataObj"
                 field="fullname"
                 @select="option => selectedCourse = option">
-              </b-autocomplete>
+              </b-autocomplete> -->
             </b-field>
+            <b-table
+                :data="filteredDataObj"
+                :columns="columns"
+                :checked-rows.sync="selectedCourses"
+                paginated
+                per-page="10"
+                pagination-simple
+                checkable
+                :striped="true">
+
+                <template slot="bottom-left">
+                  <b>Total checked</b>: {{ selectedCourses.length }}
+                </template>
+              </b-table>
           </div>
           <div class="field">
             <div class="control">
@@ -53,9 +74,15 @@ export default {
         language_id: null
       },
       selectedLanguage: null,
-      selectedCourse: null,
+      selectedCourses: [],
       name: '',
-      language: ''
+      language: '',
+      columns: [
+        {
+          field: 'fullname',
+          label: 'Course'
+        }
+      ]
     }
   },
   computed: {
@@ -77,21 +104,32 @@ export default {
     }
   },
   methods: {
-    submit (e) {
-      if (!this.selectedLanguage || !this.selectedCourse) {
-        this.toast('dark', 'Please select a course and a language.')
+    // cancelSearch () {
+    //   console.log('cancel')
+    // },
+    async submit (e) {
+      if (!this.selectedLanguage || this.selectedCourses.length < 1) {
+        this.toast('dark', 'Please select a language and course(s).')
         return
       }
-      this.submitData.course_id = this.selectedCourse.id
       this.submitData.language_id = this.selectedLanguage.id
-      axios.post('/api/course-languages', this.submitData).then(response => {
-        this.toast('success', response.data)
+      try {
+        let message = await this.postEachCourse()
+        this.toast('success', message)
         setTimeout((function () {
           this.$router.replace({ name: 'courseLanguages' })
         }.bind(this)), 1000)
-      }).catch(error => {
+      } catch (error) {
         this.toast('danger', error.response.data.message)
-      })
+      }
+    },
+    async postEachCourse () {
+      let response = ''
+      for (let i = 0; i < this.selectedCourses.length; i++) {
+        this.submitData.course_id = this.selectedCourses[i].id
+        response = await axios.post('/api/course-languages', this.submitData)
+      }
+      return response.data
     },
     toast (type = 'dark', message) {
       this.$toast.open({
