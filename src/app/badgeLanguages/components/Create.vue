@@ -5,7 +5,24 @@
         <form v-on:submit.prevent="submit">
           <div class="field">
             <div class="control">
-              <b-field label="Badge">
+              <b-field label="Badges">
+                <b-input icon="magnify" placeholder="Search..." id="searchBadges" autofocus v-model="name"></b-input>
+              </b-field>
+              <b-table
+                :data="filteredDataObj"
+                :columns="columns"
+                :checked-rows.sync="selectedBadges"
+                paginated
+                per-page="10"
+                pagination-simple
+                checkable
+                :striped="true">
+
+                <template slot="bottom-left">
+                  <b>Total checked</b>: {{ selectedBadges.length }}
+                </template>
+              </b-table>
+              <!-- <b-field label="Badge">
                 <b-autocomplete
                   v-model="name"
                   placeholder="Select a badge..."
@@ -14,7 +31,7 @@
                   field="name"
                   @select="option => selectedBadge = option">
                 </b-autocomplete>
-              </b-field>
+              </b-field> -->
             </div>
           </div>
           <div class="field">
@@ -50,14 +67,20 @@ export default {
     return {
       languages: [],
       badges: [],
+      selectedBadges: [],
       submitData: {
         badge_id: null,
         language_id: null
       },
       selectedLanguage: null,
-      selectedBadge: null,
       name: '',
-      language: ''
+      language: '',
+      columns: [
+        {
+          field: 'name',
+          label: 'Badge'
+        }
+      ]
     }
   },
   computed: {
@@ -79,21 +102,29 @@ export default {
     }
   },
   methods: {
-    submit (e) {
-      if (!this.selectedLanguage || !this.selectedBadge) {
-        this.toast('dark', 'Please select a badge and a language.')
+    async submit (e) {
+      if (!this.selectedLanguage || this.selectedBadges.length < 1) {
+        this.toast('dark', 'Please select a language and badge(s).')
         return
       }
-      this.submitData.badge_id = this.selectedBadge.id
       this.submitData.language_id = this.selectedLanguage.id
-      axios.post('/api/badge-languages', this.submitData).then(response => {
-        this.toast('success', response.data)
+      try {
+        let message = await this.postEachBadge()
+        this.toast('success', message)
         setTimeout((function () {
           this.$router.replace({ name: 'badgeLanguages' })
         }.bind(this)), 1000)
-      }).catch(error => {
+      } catch (error) {
         this.toast('danger', error.response.data.message)
-      })
+      }
+    },
+    async postEachBadge () {
+      let response = ''
+      for (let i = 0; i < this.selectedBadges.length; i++) {
+        this.submitData.badge_id = this.selectedBadges[i].id
+        response = await axios.post('/api/badge-languages', this.submitData)
+      }
+      return response.data.message
     },
     toast (type = 'dark', message) {
       this.$toast.open({

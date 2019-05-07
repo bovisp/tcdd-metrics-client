@@ -12,7 +12,7 @@
         <div class="is-flex my-4">
           <router-link :to="{ name: 'createMultilingualCourse' }" class="button is-link ml-auto">Create</router-link>
         </div>
-        <b-table :data="data" :columns="columns" :selected.sync="selected" :striped="true"></b-table>
+        <b-table :data="data" :columns="columns" :selected.sync="selected" striped="true"></b-table>
       </div>
     </div>
 

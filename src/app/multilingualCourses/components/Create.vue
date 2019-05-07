@@ -32,7 +32,8 @@
                 paginated
                 per-page="10"
                 pagination-simple
-                checkable>
+                checkable
+                :striped="true">
 
                 <template slot="bottom-left">
                   <b>Total checked</b>: {{ selectedCourses.length }}
