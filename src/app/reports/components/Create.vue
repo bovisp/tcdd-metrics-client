@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section>
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
@@ -36,21 +36,28 @@
           </div>
           <div class="field">
             <div class="control">
-              <b-field label="Reports">
-                <b-select multiple  native-size="2" v-model="selectedReports" placeholder="Select a report">
+              <b-field>
+                <b-table
+                  :data="reports"
+                  :columns="columns"
+                  :checked-rows.sync="selectedReports"
+                  checkable
+                  :striped="true">
+                </b-table>
+                <!-- <b-select multiple  native-size="2" v-model="selectedReports" placeholder="Select a report">
                   <option
                     v-for="report in reports"
                     :value="report"
                     :key="report.id">
                     {{ report.name }}
                   </option>
-                </b-select>
+                </b-select> -->
               </b-field>
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link">Submit</button>
+              <button class="button is-link" style="margin-bottom: 1.5rem;">Submit</button>
             </div>
           </div>
         </form>
@@ -74,20 +81,27 @@ export default {
         startDate: null,
         endDate: null
       },
+      errors: [],
       selectedReports: [],
       maxDate: null,
       minDate: null,
-      minDates: []
+      minDates: [],
+      columns: [
+        {
+          field: 'name',
+          label: 'Report'
+        }
+      ]
     }
   },
 
   methods: {
     submit (e) {
-      if (!this.selectedReports.length || !this.startDate || !this.endDate) {
-        this.toast('dark', 'Please select a start date, end date and report.')
+      if (!this.selectedReports.length) {
+        this.toast('dark', 'Please select one or more reports.')
         return
       }
-      if (this.startDate > this.endDate) {
+      if (this.startDate >= this.endDate) {
         this.toast('dark', 'The start date must be before the end date.')
         return
       }
@@ -97,7 +111,6 @@ export default {
       let reportsToRemove = []
       for (const report of this.selectedReports) {
         let reportMinDate = this.minDates.filter(d => d[report.id])[0]
-        console.log(reportMinDate)
         if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { // gets value of first key
           reportsToRemove.push(report)
         }
@@ -137,7 +150,7 @@ export default {
         let response = await axios.post('/api/reports', this.submitData)
         this.toast('success', response.data)
       } catch (error) {
-        this.toast('danger', error.response.data.message)
+        this.toast('danger', error.response.data)
       }
       loadingComponent.close()
       this.refreshForm()

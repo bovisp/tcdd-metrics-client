@@ -1,12 +1,22 @@
 <template>
-  <section class="section">
+  <section>
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
+        <div class="my-4">
+          <b-message title="Info" type="is-info">
+              Please select one or more badges and a language.
+          </b-message>
+        </div>
         <form v-on:submit.prevent="submit">
           <div class="field">
             <div class="control">
               <b-field label="Badges">
-                <b-input icon="magnify" placeholder="Search..." id="searchBadges" autofocus v-model="name"></b-input>
+                <b-input icon="magnify"
+                  @keyup.native.esc="name = ''"
+                  placeholder="Search..."
+                  id="searchBadges"
+                  autofocus
+                  v-model="name"></b-input>
               </b-field>
               <b-table
                 :data="filteredDataObj"
@@ -19,7 +29,7 @@
                 :striped="true">
 
                 <template slot="bottom-left">
-                  <b>Total checked</b>: {{ selectedBadges.length }}
+                  <button class="button is-text" @click.prevent="selectedBadges = []">Clear Selected</button>
                 </template>
               </b-table>
               <!-- <b-field label="Badge">
@@ -36,7 +46,7 @@
           </div>
           <div class="field">
             <div class="control">
-              <b-field label="Language">
+              <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
                 <b-autocomplete
                   v-model="language"
                   placeholder="Select a language..."
@@ -46,11 +56,14 @@
                   @select="option => selectedLanguage = option">
                 </b-autocomplete>
               </b-field>
+              <p class="help is-danger" v-if="errors.language_id">
+                  {{ errors.language_id[0] }}
+              </p>
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link">Submit</button>
+              <button class="button is-link" style="margin-bottom: 1.5rem;" >Submit</button>
             </div>
           </div>
         </form>
@@ -72,8 +85,9 @@ export default {
         badge_id: null,
         language_id: null
       },
-      selectedLanguage: null,
+      selectedLanguage: {},
       name: '',
+      errors: [],
       language: '',
       columns: [
         {
@@ -103,26 +117,46 @@ export default {
   },
   methods: {
     async submit (e) {
-      if (!this.selectedLanguage || this.selectedBadges.length < 1) {
-        this.toast('dark', 'Please select a language and badge(s).')
+      if (!this.selectedBadges.length) {
+        this.toast('dark', 'Please select one or more badges.')
         return
       }
       this.submitData.language_id = this.selectedLanguage.id
-      try {
-        let message = await this.postEachBadge()
-        this.toast('success', message)
-        setTimeout((function () {
-          this.$router.replace({ name: 'badgeLanguages' })
-        }.bind(this)), 1000)
-      } catch (error) {
-        this.toast('danger', error.response.data.message)
-      }
-    },
-    async postEachBadge () {
       let response = ''
       for (let i = 0; i < this.selectedBadges.length; i++) {
-        this.submitData.badge_id = this.selectedBadges[i].id
-        response = await axios.post('/api/badge-languages', this.submitData)
+        try {
+          this.submitData.badge_id = this.selectedBadges[i].id
+          response = await axios.post('/api/badge-languages', this.submitData)
+        } catch (e) {
+          this.errors = e.response.data.errors
+          return
+        }
+      }
+      this.toast('success', response.data)
+      setTimeout((function () {
+        this.$router.replace({ name: 'badgeLanguages' })
+      }.bind(this)), 1000)
+      // try {
+      //   let message = await this.postEachBadge()
+      //   this.toast('success', message)
+      //   setTimeout((function () {
+      //     this.$router.replace({ name: 'badgeLanguages' })
+      //   }.bind(this)), 1000)
+      // } catch (e) {
+      //   this.errors = e.response.data.errors
+      // }
+    },
+    async postEachBadge () {
+      this.submitData.language_id = this.selectedLanguage.id
+      let response = ''
+      for (let i = 0; i < this.selectedBadges.length; i++) {
+        try {
+          this.submitData.badge_id = this.selectedBadges[i].id
+          response = await axios.post('/api/badge-languages', this.submitData)
+        } catch (e) {
+          this.errors = e.response.data.errors
+          return
+        }
       }
       return response.data
     },

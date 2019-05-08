@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section>
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
@@ -11,7 +11,12 @@
           <div class="field">
             <div class="control">
               <b-field label="Courses">
-                <b-input icon="magnify" placeholder="Search..." id="searchCourses" autofocus v-model="name"></b-input>
+                <b-input icon="magnify"
+                  placeholder="Search..."
+                  id="searchCourses"
+                  autofocus
+                  v-model="name"
+                  @keyup.native.esc="name = ''"></b-input>
               </b-field>
               <!-- <b-select multiple  native-size="7" v-model="selectedCourses" @click.native="changed" placeholder="Select courses">
                 <option
@@ -36,20 +41,28 @@
                 :striped="true">
 
                 <template slot="bottom-left">
-                  <b>Total checked</b>: {{ selectedCourses.length }}
+                  <button class="button is-text" @click.prevent="selectedCourses = []">Clear Selected</button>
                 </template>
               </b-table>
 
             </div>
             <div class="control">
               <b-field label="Course Group Name">
-                <input class="input" id="courseGroupName" autofocus v-model="courseGroupName">
+                <input class="input"
+                  id="courseGroupName"
+                  placeholder="Enter a course group name..."
+                  autofocus
+                  v-model="courseGroupName"
+                  :class="{ 'is-danger': errors.course_group_name }">
               </b-field>
+              <p class="help is-danger" v-if="errors.course_group_name">
+                  {{ errors.course_group_name[0] }}
+              </p>
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link">Submit</button>
+              <button class="button is-link" style="margin-bottom: 1.5rem;">Submit</button>
             </div>
           </div>
         </form>
@@ -73,7 +86,7 @@ export default {
       selectedCourses: [],
       courseGroupName: '',
       name: '',
-      testArray: [],
+      errors: [],
       columns: [
         {
           field: 'fullname',
@@ -88,22 +101,16 @@ export default {
         return course.fullname
           .toLowerCase()
           .includes(this.name.toLowerCase())
-          // .indexOf(this.name.toLowerCase()) >= 0
       })
     }
   },
   methods: {
-    changed (e) {
-      console.log(e)
-      this.testArray.push(e.target.value)
-    },
     async submit (e) {
-      if (!this.selectedCourses || this.selectedCourses.length < 2) {
+      if (this.selectedCourses.length < 2) {
         this.toast('dark', 'Please select at least two courses.')
         return
       }
       await this.postFirstSelectedCourse()
-      await this.postOtherSelectedCourses()
     },
     async postFirstSelectedCourse () {
       this.submitData.course_id = this.selectedCourses[0].id
@@ -111,8 +118,9 @@ export default {
       try {
         let firstResponse = await axios.post('/api/multilingual-courses', this.submitData)
         this.submitData.multilingual_course_group_id = firstResponse.data.multilingual_course_group_id // set group id for subsequent course post requests
-      } catch (error) {
-        this.toast('danger', error.response.data.message)
+        this.postOtherSelectedCourses()
+      } catch (e) {
+        this.errors = e.response.data.errors
       }
     },
     async postOtherSelectedCourses () {

@@ -1,15 +1,20 @@
 <template>
-  <section class="section">
+  <section>
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
+        <div class="my-4">
+          <b-message title="Info" type="is-info">
+              Please select one or more courses and a language.
+          </b-message>
+        </div>
         <form v-on:submit.prevent="submit">
           <div class="field">
             <b-field label="Course">
               <b-input icon="magnify"
-                placeholder="Search..." 
-                id="searchBadges" 
-                autofocus 
-                v-model="name" 
+                placeholder="Search..."
+                id="searchBadges"
+                autofocus
+                v-model="name"
                 @keyup.native.esc="name=''"></b-input>
 
               <!-- <b-autocomplete
@@ -32,13 +37,13 @@
                 :striped="true">
 
                 <template slot="bottom-left">
-                  <b>Total checked</b>: {{ selectedCourses.length }}
+                  <button class="button is-text" @click.prevent="selectedCourses = []">Clear Selected</button>
                 </template>
               </b-table>
           </div>
           <div class="field">
             <div class="control">
-              <b-field label="Language">
+              <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
                 <b-autocomplete
                   v-model="language"
                   placeholder="Select a language..."
@@ -48,11 +53,14 @@
                   @select="option => selectedLanguage = option">
                 </b-autocomplete>
               </b-field>
+              <p class="help is-danger" v-if="errors.language_id">
+                  {{ errors.language_id[0] }}
+              </p>
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link">Submit</button>
+              <button class="button is-link" style="margin-bottom: 1.5rem;">Submit</button>
             </div>
           </div>
         </form>
@@ -73,9 +81,10 @@ export default {
         course_id: null,
         language_id: null
       },
-      selectedLanguage: null,
+      selectedLanguage: {},
       selectedCourses: [],
       name: '',
+      errors: [],
       language: '',
       columns: [
         {
@@ -108,20 +117,25 @@ export default {
     //   console.log('cancel')
     // },
     async submit (e) {
-      if (!this.selectedLanguage || this.selectedCourses.length < 1) {
-        this.toast('dark', 'Please select a language and course(s).')
+      if (!this.selectedCourses.length) {
+        this.toast('dark', 'Please select one or more courses.')
         return
       }
       this.submitData.language_id = this.selectedLanguage.id
-      try {
-        let message = await this.postEachCourse()
-        this.toast('success', message)
-        setTimeout((function () {
-          this.$router.replace({ name: 'courseLanguages' })
-        }.bind(this)), 1000)
-      } catch (error) {
-        this.toast('danger', error.response.data.message)
+      let response = ''
+      for (let i = 0; i < this.selectedCourses.length; i++) {
+        try {
+          this.submitData.course_id = this.selectedCourses[i].id
+          response = await axios.post('/api/course-languages', this.submitData)
+        } catch (e) {
+          this.errors = e.response.data.errors
+          return
+        }
       }
+      this.toast('success', response.data)
+      setTimeout((function () {
+        this.$router.replace({ name: 'courseLanguages' })
+      }.bind(this)), 1000)
     },
     async postEachCourse () {
       let response = ''
