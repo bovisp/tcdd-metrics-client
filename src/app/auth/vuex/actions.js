@@ -67,9 +67,6 @@ export const checkTokenExists = ({ commit, dispatch }, token) => {
     }
     return Promise.resolve(token)
   })
-  // .catch((error) => {
-  //   console.log(error)
-  // })
 }
 
 export const clearAuth = async ({ commit }, token) => {

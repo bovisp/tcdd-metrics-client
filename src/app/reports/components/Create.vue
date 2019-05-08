@@ -4,7 +4,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select a start date, end date and report(s) to generate.
+              Please select a start date, end date and one or more reports to generate.
           </b-message>
         </div>
         <form v-on:submit.prevent="submit">

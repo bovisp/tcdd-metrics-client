@@ -11,7 +11,7 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
+            <div class="navbar-start" v-if="authenticated">
               <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
               <router-link class="navbar-item" :to="{ name: 'courseLanguages' }">Course Languages</router-link>
               <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }">Course Groups</router-link>
@@ -63,7 +63,7 @@ export default {
     }),
     signout () {
       this.logout().then(() => {
-        this.$router.replace({ name: '/' })
+        this.$router.replace({ name: 'home' })
       })
     }
   }
