@@ -1,20 +1,19 @@
 <template>
   <section>
-    <div class="field">
-        <b-field label="Language" >
-            <!-- :type="{ 'is-danger': errors.language_id }" -->
-        <b-autocomplete
-            v-model="languageName"
-            placeholder="Select a language..."
-            openOnFocus
-            :data="filteredLanguages"
-            field="name"
-            @select="option => selectedLanguage = option">
-        </b-autocomplete>
+    <div class="control">
+        <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
+          <b-autocomplete
+              v-model="languageName"
+              placeholder="Select a language..."
+              openOnFocus
+              :data="filteredLanguages"
+              field="name"
+              @select="option => selectedLanguage = option">
+          </b-autocomplete>
         </b-field>
-        <!-- <p class="help is-danger" v-if="errors.language_id">
+        <p class="help is-danger" v-if="errors.language_id">
             {{ errors.language_id[0] }}
-        </p> -->
+        </p>
     </div>
   </section>
 </template>
@@ -26,9 +25,12 @@ export default {
   data () {
     return {
       languages: [],
-      selectedLanguage: {},
       languageName: ''
     }
+  },
+  props: {
+    selectedLanguage: {},
+    errors: []
   },
   computed: {
     filteredLanguages () {

@@ -50,7 +50,8 @@
                   openOnFocus
                   :data="filteredLanguages"
                   field="name"
-                  @select="option => selectedLanguage = option">
+                  @select="option => selectedLanguage = option"
+                  @keyup.native.esc="language = ''">
                 </b-autocomplete>
               </b-field>
               <p class="help is-danger" v-if="errors.language_id">

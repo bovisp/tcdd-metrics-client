@@ -1,6 +1,5 @@
 <template>
   <section>
-    <!-- <LanguageSelect></LanguageSelect> -->
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
@@ -33,20 +32,11 @@
                   <button class="button is-text" @click.prevent="selectedBadges = []">Clear Selected</button>
                 </template>
               </b-table>
-              <!-- <b-field label="Badge">
-                <b-autocomplete
-                  v-model="name"
-                  placeholder="Select a badge..."
-                  openOnFocus
-                  :data="filteredDataObj"
-                  field="name"
-                  @select="option => selectedBadge = option">
-                </b-autocomplete>
-              </b-field> -->
             </div>
           </div>
           <div class="field">
             <div class="control">
+              <!-- <LanguageSelect :selectedLanguage="selectedLanguage" :errors="errors"></LanguageSelect> -->
               <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
                 <b-autocomplete
                   v-model="language"
@@ -54,7 +44,8 @@
                   openOnFocus
                   :data="filteredLanguages"
                   field="name"
-                  @select="option => selectedLanguage = option">
+                  @select="option => selectedLanguage = option"
+                  @keyup.native.esc="language = ''">
                 </b-autocomplete>
               </b-field>
               <p class="help is-danger" v-if="errors.language_id">

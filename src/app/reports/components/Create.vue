@@ -137,7 +137,6 @@ export default {
               continue
             }
             warnMessage += ' and ' + report.name
-            continue
           }
           warnMessage += ' ' + report.name + ','
         }
