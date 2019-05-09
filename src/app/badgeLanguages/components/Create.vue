@@ -1,5 +1,6 @@
 <template>
   <section>
+    <!-- <LanguageSelect></LanguageSelect> -->
     <div class="columns is-desktop">
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
@@ -74,8 +75,12 @@
 
 <script>
 import axios from 'axios'
+import LanguageSelect from '@/components/LanguageSelect'
 
 export default {
+  components: {
+    LanguageSelect
+  },
   data () {
     return {
       languages: [],

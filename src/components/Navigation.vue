@@ -4,26 +4,24 @@
             <!-- <router-link :to="{ name: 'home' }" class="navbar-item is-size-5">Home</router-link> -->
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
             </a>
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start" v-if="authenticated">
-              <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
-              <router-link class="navbar-item" :to="{ name: 'courseLanguages' }">Course Languages</router-link>
-              <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }">Course Groups</router-link>
-              <router-link class="navbar-item" :to="{ name: 'reports' }">Generate Report</router-link>
+            <div class="navbar-start" >
+              <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }" v-if="authenticated">Badge Languages</router-link>
+              <router-link class="navbar-item" :to="{ name: 'courseLanguages' }" v-if="authenticated">Course Languages</router-link>
+              <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }" v-if="authenticated">Course Groups</router-link>
+              <router-link class="navbar-item" :to="{ name: 'reports' }" v-if="authenticated">Generate Report</router-link>
             </div>
 
             <div class="navbar-end">
               <template v-if="!authenticated">
-                  <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
-
-                  <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
-
+                <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
+                <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
               </template>
 
               <template v-else>

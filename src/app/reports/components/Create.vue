@@ -42,6 +42,7 @@
                   :columns="columns"
                   :checked-rows.sync="selectedReports"
                   checkable
+                  :is-row-checkable="(row) => this.validReports.includes(row)"
                   :striped="true">
                 </b-table>
                 <!-- <b-select multiple  native-size="2" v-model="selectedReports" placeholder="Select a report">
@@ -68,7 +69,6 @@
 
 <script>
 import axios from 'axios'
-import { pull } from 'lodash'
 
 export default {
   data () {
@@ -94,7 +94,19 @@ export default {
       ]
     }
   },
-
+  computed: {
+    validReports () {
+      //include reports where report min date is before selected end date
+      if(this.reports.length && this.minDates.length) {
+        return this.reports.filter((report) => {
+          let reportMinDate = this.minDates.filter(d => d[report.id])[0]
+          let minDateValue = reportMinDate[Object.keys(reportMinDate)[0]]
+          return minDateValue <= this.endDate
+        })
+      }
+      return []
+    }
+  },
   methods: {
     submit (e) {
       if (!this.selectedReports.length) {
@@ -108,29 +120,29 @@ export default {
       this.generateValidReports()
     },
     generateValidReports () {
-      let reportsToRemove = []
+      //warn if any selected reports have a min date after selected start date
+      let reportsToWarn = []
+      let warnMessage = ''
       for (const report of this.selectedReports) {
         let reportMinDate = this.minDates.filter(d => d[report.id])[0]
-        if (this.endDate < reportMinDate[Object.keys(reportMinDate)[0]]) { // gets value of first key
-          reportsToRemove.push(report)
+        if (this.startDate < reportMinDate[Object.keys(reportMinDate)[0]]) { // gets value of first key
+          reportsToWarn.push(report)
         }
       }
-      let reportMessage = ''
-      if (reportsToRemove.length > 0) {
-        for (const reportToRemove of reportsToRemove) {
-          pull(this.selectedReports, reportToRemove)
-          if (reportsToRemove.indexOf(reportToRemove) === reportsToRemove.length - 1) {
-            if (reportsToRemove.length === 1) {
-              reportMessage += ' ' + reportToRemove.name
+      if (reportsToWarn.length) {
+        for (const report of reportsToWarn) {
+          if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
+            if (reportsToWarn.length === 1) {
+              warnMessage += ' ' + report.name
               continue
             }
-            reportMessage += ' and ' + reportToRemove.name
+            warnMessage += ' and ' + report.name
             continue
           }
-          reportMessage += ' ' + reportToRemove.name + ','
+          warnMessage += ' ' + report.name + ','
         }
         this.$dialog.confirm({
-          message: `Selected end date is before the minimum date for${reportMessage}. These reports will not be included. Continue?`,
+          message: `Selected start date is before the minimum date for${warnMessage}. Continue?`,
           type: 'is-danger',
           onConfirm: () => {
             this.generateReport()
@@ -153,11 +165,7 @@ export default {
         this.toast('danger', error.response.data)
       }
       loadingComponent.close()
-      this.refreshForm()
-    },
-    refreshForm () {
       this.selectedReports = []
-      this.reportsToRemove = []
     },
     toast (type = 'dark', message) {
       this.$toast.open({
