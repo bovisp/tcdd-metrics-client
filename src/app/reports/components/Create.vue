@@ -69,6 +69,7 @@
 
 <script>
 import axios from 'axios'
+import pull from 'lodash/pull'
 
 export default {
   data () {
@@ -98,11 +99,16 @@ export default {
     validReports () {
       //include reports where report min date is before selected end date
       if(this.reports.length && this.minDates.length) {
-        return this.reports.filter((report) => {
+        let validReports = this.reports.filter((report) => {
           let reportMinDate = this.minDates.filter(d => d[report.id])[0]
           let minDateValue = reportMinDate[Object.keys(reportMinDate)[0]]
           return minDateValue <= this.endDate
         })
+        this.selectedReports.forEach( r => {
+          if(!validReports.includes(r))
+            this.selectedReports = this.selectedReports.filter(report => report !== r)
+        })
+        return validReports
       }
       return []
     }
