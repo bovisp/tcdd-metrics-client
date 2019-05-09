@@ -8,7 +8,7 @@
               openOnFocus
               :data="filteredLanguages"
               field="name"
-              @select="option => selectedLanguage = option">
+              @select="option => $emit('select', option)">
           </b-autocomplete>
         </b-field>
         <p class="help is-danger" v-if="errors.language_id">
@@ -29,8 +29,7 @@ export default {
     }
   },
   props: {
-    selectedLanguage: {},
-    errors: []
+    errors: Object
   },
   computed: {
     filteredLanguages () {
@@ -41,9 +40,6 @@ export default {
           .indexOf(this.languageName.toLowerCase()) >= 0
       })
     }
-  },
-  methods: {
-
   },
   mounted () {
     axios.get('/api/languages').then(response => {

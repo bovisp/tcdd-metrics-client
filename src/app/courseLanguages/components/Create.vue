@@ -43,20 +43,7 @@
           </div>
           <div class="field">
             <div class="control">
-              <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
-                <b-autocomplete
-                  v-model="language"
-                  placeholder="Select a language..."
-                  openOnFocus
-                  :data="filteredLanguages"
-                  field="name"
-                  @select="option => selectedLanguage = option"
-                  @keyup.native.esc="language = ''">
-                </b-autocomplete>
-              </b-field>
-              <p class="help is-danger" v-if="errors.language_id">
-                  {{ errors.language_id[0] }}
-              </p>
+              <LanguageSelect :errors="errors" @select="selectedLanguage = $event"></LanguageSelect>
             </div>
           </div>
           <div class="field">
@@ -72,8 +59,12 @@
 
 <script>
 import axios from 'axios'
+import LanguageSelect from '@/components/LanguageSelect'
 
 export default {
+  components: {
+    LanguageSelect
+  },
   data () {
     return {
       languages: [],
@@ -85,7 +76,7 @@ export default {
       selectedLanguage: {},
       selectedCourses: [],
       name: '',
-      errors: [],
+      errors: {},
       language: '',
       columns: [
         {
