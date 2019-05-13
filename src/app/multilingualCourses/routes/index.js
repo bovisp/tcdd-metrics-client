@@ -1,4 +1,4 @@
-import { CreateMultilingualCourse, MultilingualCourses } from '../components'
+import { CreateMultilingualCourse, MultilingualCourses, CreateCourseGroup } from '../components'
 
 export default [
   {
@@ -13,6 +13,14 @@ export default [
     path: '/multilingual-courses',
     component: MultilingualCourses,
     name: 'multilingualCourses',
+    meta: {
+      needsAuth: true
+    }
+  },
+  {
+    path: '/multilingual-courses/create-course-group',
+    component: CreateCourseGroup,
+    name: 'createCourseGroup',
     meta: {
       needsAuth: true
     }

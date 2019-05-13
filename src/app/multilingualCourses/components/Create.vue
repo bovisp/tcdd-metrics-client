@@ -4,8 +4,11 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select two or more courses and a course group name.
+              Please select two or more courses and a course group.
           </b-message>
+        </div>
+        <div class="is-flex my-4">
+          <router-link :to="{ name: 'createCourseGroup' }" class="button is-link ml-auto">Create Course Group</router-link>
         </div>
         <form v-on:submit.prevent="submit">
           <div class="field">
@@ -47,16 +50,19 @@
 
             </div>
             <div class="control">
-              <b-field label="Course Group Name">
-                <input class="input"
-                  id="courseGroupName"
-                  placeholder="Enter a course group name..."
-                  autofocus
+              <b-field label="Course Group Name" :type="{ 'is-danger': errors.multilingual_course_group_id }">
+                <b-autocomplete
                   v-model="courseGroupName"
-                  :class="{ 'is-danger': errors.course_group_name }">
+                  placeholder="Enter a course group name..."
+                  openOnFocus
+                  :data="filteredCourseGroups"
+                  field="name"
+                  @select="option => selectedCourseGroup = option"
+                  @keyup.native.esc="courseGroupName=''">
+                </b-autocomplete>
               </b-field>
-              <p class="help is-danger" v-if="errors.course_group_name">
-                  {{ errors.course_group_name[0] }}
+              <p class="help is-danger" v-if="errors.multilingual_course_group_id">
+                  {{ errors.multilingual_course_group_id[0] }}
               </p>
             </div>
           </div>
@@ -78,12 +84,14 @@ export default {
   data () {
     return {
       courses: [],
+      courseGroups: [],
       submitData: {
         course_id: null,
         multilingual_course_group_id: null,
         course_group_name: ''
       },
       selectedCourses: [],
+      selectedCourseGroup: {},
       courseGroupName: '',
       name: '',
       errors: [],
@@ -102,45 +110,42 @@ export default {
           .toLowerCase()
           .includes(this.name.toLowerCase())
       })
+    },
+    filteredCourseGroups () {
+      return this.courseGroups.filter(group => {
+        return group.name
+          .toLowerCase()
+          .includes(this.courseGroupName.toLowerCase())
+      })
     }
   },
   methods: {
+    refreshForm () {
+      this.selectedCourseGroup = {}
+      this.selectedCourses = []
+    },
     async submit (e) {
-      if (this.selectedCourses.length < 2) {
-        this.toast('dark', 'Please select at least two courses.')
-        return
+      // if (!this.selectedCourses.length || !this.selectedCourseGroup.id) {
+      //   this.toast('dark', 'Please select one or more courses and a course group.')
+      //   return
+      // }
+      this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
+      let response = ''
+      for (let i = 0; i < this.selectedCourses.length; i++) {
+        try {
+          this.submitData.course_id = this.selectedCourses[i].id
+          response = await axios.post('/api/multilingual-courses', this.submitData)
+        } catch (e) {
+          this.errors = e.response.data.errors
+          this.refreshForm ()
+          return
+        }
       }
-      await this.postFirstSelectedCourse()
-    },
-    async postFirstSelectedCourse () {
-      this.submitData.course_id = this.selectedCourses[0].id
-      this.submitData.course_group_name = this.courseGroupName
-      try {
-        let firstResponse = await axios.post('/api/multilingual-courses', this.submitData)
-        this.submitData.multilingual_course_group_id = firstResponse.data.multilingual_course_group_id // set group id for subsequent course post requests
-        this.postOtherSelectedCourses()
-      } catch (e) {
-        this.errors = e.response.data.errors
-      }
-    },
-    async postOtherSelectedCourses () {
-      try {
-        let message = await this.postEachAdditionalCourse()
-        this.toast('success', message)
-        setTimeout((function () {
-          this.$router.replace({ name: 'multilingualCourses' })
-        }.bind(this)), 1000)
-      } catch (error) {
-        this.toast('danger', error.response.data.message)
-      }
-    },
-    async postEachAdditionalCourse () {
-      let subsequentResponse
-      for (let i = 1; i < this.selectedCourses.length; i++) {
-        this.submitData.course_id = this.selectedCourses[i].id
-        subsequentResponse = await axios.post('/api/multilingual-courses', this.submitData)
-      }
-      return subsequentResponse.data.message
+      this.refreshForm ()
+      this.toast('success', response.data.message)
+      setTimeout((function () {
+        this.$router.replace({ name: 'multilingualCourses' })
+      }.bind(this)), 1000)
     },
     toast (type = 'dark', message) {
       this.$toast.open({
@@ -152,6 +157,9 @@ export default {
   mounted () {
     axios.get('/api/courses/?filter=notinmlang').then(response => {
       this.courses = response.data
+    })
+    axios.get('/api/multilingual-course-groups').then(response => {
+      this.courseGroups = response.data
     })
   }
 }

@@ -8,7 +8,8 @@
               openOnFocus
               :data="filteredLanguages"
               field="name"
-              @select="option => $emit('select', option)">
+              @select="option => $emit('select', option)"
+              :class="{ 'is-danger': errors.language_id }">
           </b-autocomplete>
         </b-field>
         <p class="help is-danger" v-if="errors.language_id">
