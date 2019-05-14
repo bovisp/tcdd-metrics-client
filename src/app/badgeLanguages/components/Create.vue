@@ -27,7 +27,6 @@
                 pagination-simple
                 checkable
                 :striped="true">
-
                 <template slot="bottom-left">
                   <button class="button is-text" @click.prevent="selectedBadges = []">Clear Selected</button>
                 </template>
@@ -103,32 +102,13 @@ export default {
         this.toast('dark', 'Please select one or more badges.')
         return
       }
-      this.submitData.language_id = this.selectedLanguage.id
-      let response = ''
-      for (let i = 0; i < this.selectedBadges.length; i++) {
-        try {
-          this.submitData.badge_id = this.selectedBadges[i].id
-          response = await axios.post('/api/badge-languages', this.submitData)
-        } catch (e) {
-          this.errors = e.response.data.errors
-          return
-        }
-      }
-      this.toast('success', response.data)
+      let responseData = await this.postEachSelectedBadge()
+      this.toast('success', responseData)
       setTimeout((function () {
         this.$router.replace({ name: 'badgeLanguages' })
       }.bind(this)), 1000)
-      // try {
-      //   let message = await this.postEachBadge()
-      //   this.toast('success', message)
-      //   setTimeout((function () {
-      //     this.$router.replace({ name: 'badgeLanguages' })
-      //   }.bind(this)), 1000)
-      // } catch (e) {
-      //   this.errors = e.response.data.errors
-      // }
     },
-    async postEachBadge () {
+    async postEachSelectedBadge () {
       this.submitData.language_id = this.selectedLanguage.id
       let response = ''
       for (let i = 0; i < this.selectedBadges.length; i++) {

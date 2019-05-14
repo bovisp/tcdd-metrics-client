@@ -105,14 +105,18 @@ export default {
     }
   },
   methods: {
-    // cancelSearch () {
-    //   console.log('cancel')
-    // },
     async submit (e) {
       if (!this.selectedCourses.length) {
         this.toast('dark', 'Please select one or more courses.')
         return
       }
+      let responseData = await this.postEachSelectedCourse()
+      this.toast('success', responseData)
+      setTimeout((function () {
+        this.$router.replace({ name: 'courseLanguages' })
+      }.bind(this)), 1000)
+    },
+    async postEachSelectedCourse () {
       this.submitData.language_id = this.selectedLanguage.id
       let response = ''
       for (let i = 0; i < this.selectedCourses.length; i++) {
@@ -123,17 +127,6 @@ export default {
           this.errors = e.response.data.errors
           return
         }
-      }
-      this.toast('success', response.data)
-      setTimeout((function () {
-        this.$router.replace({ name: 'courseLanguages' })
-      }.bind(this)), 1000)
-    },
-    async postEachCourse () {
-      let response = ''
-      for (let i = 0; i < this.selectedCourses.length; i++) {
-        this.submitData.course_id = this.selectedCourses[i].id
-        response = await axios.post('/api/course-languages', this.submitData)
       }
       return response.data
     },

@@ -21,18 +21,6 @@
                   v-model="name"
                   @keyup.native.esc="name = ''"></b-input>
               </b-field>
-              <!-- <b-select multiple  native-size="7" v-model="selectedCourses" @click.native="changed" placeholder="Select courses">
-                <option
-                  v-for="course in filteredDataObj"
-                  :value="course.id"
-                  :key="course.id">
-                  {{ course.fullname }}
-                </option>
-              </b-select> -->
-              <!-- <select multiple size="7" name="" id="" v-model="selectedCourses" @click="changed">
-                <option v-for="course in filteredDataObj" :value="course.id" :key="course.id">{{ course.fullname }}</option>
-              </select> -->
-
               <b-table
                 :data="filteredDataObj"
                 :columns="columns"
@@ -42,12 +30,10 @@
                 pagination-simple
                 checkable
                 :striped="true">
-
                 <template slot="bottom-left">
                   <button class="button is-text" @click.prevent="selectedCourses = []">Clear Selected</button>
                 </template>
               </b-table>
-
             </div>
             <div class="control">
               <b-field label="Course Group" :type="{ 'is-danger': errors.multilingual_course_group_id }">
@@ -125,10 +111,16 @@ export default {
       this.selectedCourses = []
     },
     async submit (e) {
-      // if (!this.selectedCourses.length || !this.selectedCourseGroup.id) {
-      //   this.toast('dark', 'Please select one or more courses and a course group.')
-      //   return
-      // }
+      this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
+      let response = ''
+      let reponseData = await this.postEachSelectedCourse()
+      this.refreshForm()
+      this.toast('success', reponseData)
+      setTimeout((function () {
+        this.$router.replace({ name: 'multilingualCourses' })
+      }.bind(this)), 1000)
+    },
+    async postEachSelectedCourse () {
       this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
       let response = ''
       for (let i = 0; i < this.selectedCourses.length; i++) {
@@ -141,11 +133,7 @@ export default {
           return
         }
       }
-      this.refreshForm()
-      this.toast('success', response.data.message)
-      setTimeout((function () {
-        this.$router.replace({ name: 'multilingualCourses' })
-      }.bind(this)), 1000)
+      return response.data
     },
     toast (type = 'dark', message) {
       this.$toast.open({

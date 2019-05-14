@@ -45,14 +45,6 @@
                   :is-row-checkable="(row) => this.validReports.includes(row)"
                   :striped="true">
                 </b-table>
-                <!-- <b-select multiple  native-size="2" v-model="selectedReports" placeholder="Select a report">
-                  <option
-                    v-for="report in reports"
-                    :value="report"
-                    :key="report.id">
-                    {{ report.name }}
-                  </option>
-                </b-select> -->
               </b-field>
             </div>
           </div>
@@ -141,16 +133,7 @@ export default {
         }
       }
       if (reportsToWarn.length) {
-        for (const report of reportsToWarn) {
-          if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
-            if (reportsToWarn.length === 1) {
-              warnMessage += ' ' + report.name
-              continue
-            }
-            warnMessage += ' and ' + report.name
-          }
-          warnMessage += ' ' + report.name + ','
-        }
+        warnMessage = this.generateWarnMessage(reportsToWarn)
         this.$dialog.confirm({
           message: `Selected start date is before the minimum date for${warnMessage}. Continue?`,
           type: 'is-danger',
@@ -161,6 +144,20 @@ export default {
         return
       }
       this.generateReport()
+    },
+    generateWarnMessage(reportsToWarn) {
+      let warnMessage = ''
+      for (const report of reportsToWarn) {
+          if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
+            if (reportsToWarn.length === 1) {
+              warnMessage += ' ' + report.name
+              continue
+            }
+            warnMessage += ' and ' + report.name
+          }
+          warnMessage += ' ' + report.name + ','
+        }
+      return warnMessage
     },
     async generateReport () {
       this.submitData.reportIds = this.selectedReports.map(r => r.id)
