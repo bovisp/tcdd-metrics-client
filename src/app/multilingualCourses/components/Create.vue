@@ -50,7 +50,7 @@
 
             </div>
             <div class="control">
-              <b-field label="Course Group Name" :type="{ 'is-danger': errors.multilingual_course_group_id }">
+              <b-field label="Course Group" :type="{ 'is-danger': errors.multilingual_course_group_id }">
                 <b-autocomplete
                   v-model="courseGroupName"
                   placeholder="Enter a course group name..."
@@ -137,11 +137,11 @@ export default {
           response = await axios.post('/api/multilingual-courses', this.submitData)
         } catch (e) {
           this.errors = e.response.data.errors
-          this.refreshForm ()
+          this.refreshForm()
           return
         }
       }
-      this.refreshForm ()
+      this.refreshForm()
       this.toast('success', response.data.message)
       setTimeout((function () {
         this.$router.replace({ name: 'multilingualCourses' })

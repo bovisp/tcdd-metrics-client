@@ -109,7 +109,13 @@ export default {
   },
   watch: {
     validReports: function (val) {
-      this.selectedReports = this.selectedReports.filter(r => this.validReports.includes(r))
+      if (val.length) {
+        this.reports.forEach(r => {
+          r.name = r.name.replace(' (no data)', '')
+          if (!val.includes(r)) { r.name = r.name + ' (no data)' }
+        })
+        this.selectedReports = this.selectedReports.filter(sr => val.includes(sr))
+      }
     }
   },
   methods: {

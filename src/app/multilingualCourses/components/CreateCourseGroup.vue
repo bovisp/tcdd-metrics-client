@@ -55,13 +55,12 @@ export default {
       }
       this.submitData.course_group_name = this.courseGroupName
       axios.post('/api/multilingual-course-groups', this.submitData).then(response => {
-          this.toast('success', response.data.message)
+        this.toast('success', response.data.message)
         setTimeout((function () {
-            this.$router.replace({ name: 'createMultilingualCourse' })
+          this.$router.replace({ name: 'createMultilingualCourse' })
         }.bind(this)), 1000)
-      }).catch(error => {
-          this.errors = e.response.data.errors
-          return
+      }).catch(e => {
+        this.errors = e.response.data.errors
       })
     },
     toast (type = 'dark', message) {
