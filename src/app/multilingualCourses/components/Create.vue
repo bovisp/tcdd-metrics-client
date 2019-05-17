@@ -4,7 +4,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="my-4">
           <b-message title="Info" type="is-info">
-              Please select two or more courses and a course group.
+              Please create a course group, and then select one or more courses to add to a group.
           </b-message>
         </div>
         <div class="is-flex my-4">
@@ -114,11 +114,13 @@ export default {
       this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
       let response = ''
       let reponseData = await this.postEachSelectedCourse()
-      this.refreshForm()
-      this.toast('success', reponseData)
-      setTimeout((function () {
-        this.$router.replace({ name: 'multilingualCourses' })
-      }.bind(this)), 1000)
+      if (!this.errors.length && reponseData) {
+        this.refreshForm()
+        this.toast('success', reponseData)
+        setTimeout((function () {
+          this.$router.replace({ name: 'multilingualCourses' })
+        }.bind(this)), 1000)
+      }
     },
     async postEachSelectedCourse () {
       this.submitData.multilingual_course_group_id = this.selectedCourseGroup.id
