@@ -4,6 +4,7 @@
         <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
           <b-autocomplete
               v-model="languageName"
+              @keyup.native.esc="languageName = ''"
               placeholder="Select a language..."
               openOnFocus
               :data="filteredLanguages"

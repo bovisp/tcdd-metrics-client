@@ -6,5 +6,6 @@ import badgeLanguages from './badgeLanguages/routes'
 import courseLanguages from './courseLanguages/routes'
 import multilingualCourses from './multilingualCourses/routes'
 import reports from './reports/routes'
+import catalogs from './catalogs/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...timeline, ...errors]
+export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...timeline, ...errors]
