@@ -220,7 +220,7 @@ export default {
       languagesFr: [],
       keywordsEn: [],
       keywordsFr: [],
-      publishDate: '',
+      publishDate: null,
       presenters: [],
       output: '',
       minEstimatedTime: {
@@ -263,7 +263,7 @@ export default {
         this.output += `</div>\n`
       }
 
-      if (this.publishDate !== '') {
+      if (this.publishDate !== null) {
         this.output += `<div id="datecreated">\n`
         this.output += `  <span class="name">Published</span>: `
         this.output += `<span class="value">${this.getPublishDate('en', this.publishDate)}</span>\n`
@@ -309,7 +309,7 @@ export default {
         this.output += `</div>\n`
       }
 
-      if (this.publishDate !== '') {
+      if (this.publishDate !== null) {
         this.output += `<div id="datecreated">\n`
         this.output += `  <span class="name">Date de publication</span>: `
         this.output += `<span class="value">${this.getPublishDate('fr', this.publishDate)}</span>\n`
