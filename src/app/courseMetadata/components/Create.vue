@@ -128,11 +128,13 @@
               </b-tabs>
               <div class="field">
                 <p class="control">
-                  <button class="button is-info" @click.prevent="submit">Submit</button>
+                  <button class="button is-link" @click.prevent="submit">Submit</button>
                 </p>
               </div>
             </form>
-
+            <button class="button is-link" v-clipboard="() => output">
+              Copy to clipboard
+            </button>
             <pre>{{ output }}</pre>
           </div>
         </div>
@@ -384,20 +386,40 @@ export default {
         output += `  <span class="name">Durée estimée</span>: `
         output += `<span class="value">`
         if (this.minEstimatedTime.days > 0) {
-          if (this.minEstimatedTime.days == 1) { output += `${this.minEstimatedTime.days} jour ` } else { output += `${this.minEstimatedTime.days} jours ` }
+          if (this.minEstimatedTime.days == 1) {
+            output += `${this.minEstimatedTime.days} jour `
+          } else {
+            output += `${this.minEstimatedTime.days} jours `
+          }
         }
-        if (this.minEstimatedTime.hours > 0) { output += `${this.minEstimatedTime.hours} h ` }
+        if (this.minEstimatedTime.hours > 0) {
+          output += `${this.minEstimatedTime.hours} h `
+        }
         if (this.minEstimatedTime.minutes > 0) {
-          if (this.minEstimatedTime.days < 1 && this.minEstimatedTime.hours < 1) { output += `${this.minEstimatedTime.minutes} minutes ` } else { output += `${this.minEstimatedTime.minutes} ` }
+          if (this.minEstimatedTime.days < 1 && this.minEstimatedTime.hours < 1) {
+            output += `${this.minEstimatedTime.minutes} minutes `
+          } else {
+            output += `${this.minEstimatedTime.minutes} `
+          }
         }
         if (this.maxEstimatedTime.days > 0 || this.maxEstimatedTime.hours > 0 || this.maxEstimatedTime.minutes > 0) {
           output += `&agrave; `
           if (this.maxEstimatedTime.days > 0) {
-            if (this.maxEstimatedTime.days == 1) { output += `${this.maxEstimatedTime.days} jour ` } else { output += `${this.maxEstimatedTime.days} jours ` }
+            if (this.maxEstimatedTime.days == 1) {
+              output += `${this.maxEstimatedTime.days} jour `
+            } else {
+              output += `${this.maxEstimatedTime.days} jours `
+            }
           }
-          if (this.maxEstimatedTime.hours > 0) { output += `${this.maxEstimatedTime.hours} h ` }
+          if (this.maxEstimatedTime.hours > 0) {
+            output += `${this.maxEstimatedTime.hours} h `
+          }
           if (this.maxEstimatedTime.minutes > 0) {
-            if (this.maxEstimatedTime.days < 1 && this.maxEstimatedTime.hours < 1) { output += `${this.maxEstimatedTime.minutes} minutes ` } else { output += `${this.maxEstimatedTime.minutes} ` }
+            if (this.maxEstimatedTime.days < 1 && this.maxEstimatedTime.hours < 1) {
+              output += `${this.maxEstimatedTime.minutes} minutes `
+            } else {
+              output += `${this.maxEstimatedTime.minutes} `
+            }
           }
         }
         output = output.trimEnd()
@@ -407,14 +429,26 @@ export default {
       }
       output += `  <span class="name">Estimated time to complete</span>: `
       output += `<span class="value">`
-      if (this.minEstimatedTime.days > 0) { output += `${this.minEstimatedTime.days}d ` }
-      if (this.minEstimatedTime.hours > 0) { output += `${this.minEstimatedTime.hours}h ` }
-      if (this.minEstimatedTime.minutes > 0) { output += `${this.minEstimatedTime.minutes}m ` }
+      if (this.minEstimatedTime.days > 0) {
+        output += `${this.minEstimatedTime.days}d `
+      }
+      if (this.minEstimatedTime.hours > 0) {
+        output += `${this.minEstimatedTime.hours}h `
+      }
+      if (this.minEstimatedTime.minutes > 0) {
+        output += `${this.minEstimatedTime.minutes}m `
+      }
       if (this.maxEstimatedTime.days > 0 || this.maxEstimatedTime.hours > 0 || this.maxEstimatedTime.minutes > 0) {
         output += `- `
-        if (this.maxEstimatedTime.days > 0) { output += `${this.maxEstimatedTime.days}d ` }
-        if (this.maxEstimatedTime.hours > 0) { output += `${this.maxEstimatedTime.hours}h ` }
-        if (this.maxEstimatedTime.minutes > 0) { output += `${this.maxEstimatedTime.minutes}m ` }
+        if (this.maxEstimatedTime.days > 0) {
+          output += `${this.maxEstimatedTime.days}d `
+        }
+        if (this.maxEstimatedTime.hours > 0) {
+          output += `${this.maxEstimatedTime.hours}h `
+        }
+        if (this.maxEstimatedTime.minutes > 0) {
+          output += `${this.maxEstimatedTime.minutes}m `
+        }
       }
       output = output.trimEnd()
       output += `</span>\n`
@@ -438,7 +472,6 @@ export default {
 
     getPublishDate (lang, date) {
       moment.locale(lang)
-
       return lang === 'en' ? moment(date).format('MMMM D, YYYY') : moment(date).format('D MMMM, YYYY')
     }
   }
