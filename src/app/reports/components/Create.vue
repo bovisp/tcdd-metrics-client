@@ -145,18 +145,18 @@ export default {
       }
       this.generateReport()
     },
-    generateWarnMessage(reportsToWarn) {
+    generateWarnMessage (reportsToWarn) {
       let warnMessage = ''
       for (const report of reportsToWarn) {
-          if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
-            if (reportsToWarn.length === 1) {
-              warnMessage += ' ' + report.name
-              continue
-            }
-            warnMessage += ' and ' + report.name
+        if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
+          if (reportsToWarn.length === 1) {
+            warnMessage += ' ' + report.name
+            continue
           }
-          warnMessage += ' ' + report.name + ','
+          warnMessage += ' and ' + report.name
         }
+        warnMessage += ' ' + report.name + ','
+      }
       return warnMessage
     },
     async generateReport () {

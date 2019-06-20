@@ -28,10 +28,10 @@ export default {
     }
   },
   computed: {
-    
+
   },
   watch: {
-    
+
   },
   methods: {
     submit () {
@@ -42,7 +42,7 @@ export default {
         url: '/api/generate-pdf',
         responseType: 'blob',
         data: data
-      }).then(function(response) {
+      }).then(function (response) {
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(response.data)
         link.download = data.language_id === 1 ? 'catalog_en.pdf' : 'catalog_fr.pdf'

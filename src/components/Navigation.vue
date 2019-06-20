@@ -17,6 +17,7 @@
               <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }" v-if="authenticated">Course Groups</router-link>
               <router-link class="navbar-item" :to="{ name: 'reports' }" v-if="authenticated">Generate Report</router-link>
               <router-link class="navbar-item" :to="{ name: 'catalogs' }" >Generate Catalog</router-link>
+              <router-link class="navbar-item" :to="{ name: 'courseMetadata' }" >Generate Course Metadata</router-link>
             </div>
 
             <div class="navbar-end">
