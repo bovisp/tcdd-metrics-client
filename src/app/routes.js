@@ -8,5 +8,6 @@ import multilingualCourses from './multilingualCourses/routes'
 import reports from './reports/routes'
 import catalogs from './catalogs/routes'
 import courseMetadata from './courseMetadata/routes'
+import pdf from './pdf/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...courseMetadata, ...timeline, ...errors]
+export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...courseMetadata, ...pdf, ...timeline, ...errors]

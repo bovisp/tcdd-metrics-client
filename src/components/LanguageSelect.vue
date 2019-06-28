@@ -2,16 +2,9 @@
   <section>
     <div class="control">
         <b-field label="Language" :type="{ 'is-danger': errors.language_id }">
-          <b-autocomplete
-              v-model="languageName"
-              @keyup.native.esc="languageName = ''"
-              placeholder="Select a language..."
-              openOnFocus
-              :data="filteredLanguages"
-              field="name"
-              @select="option => $emit('select', option)"
-              :class="{ 'is-danger': errors.language_id }">
-          </b-autocomplete>
+        <vSelect label="name"
+          :options="languages"
+          @input="option => $emit('select', option)" />
         </b-field>
         <p class="help is-danger" v-if="errors.language_id">
             {{ errors.language_id[0] }}
@@ -22,26 +15,19 @@
 
 <script>
 import axios from 'axios'
+import vSelect from 'vue-select'
 
 export default {
+  components: {
+    vSelect
+  },
   data () {
     return {
-      languages: [],
-      languageName: ''
+      languages: []
     }
   },
   props: {
     errors: Object
-  },
-  computed: {
-    filteredLanguages () {
-      return this.languages.filter((language) => {
-        return language.name
-          .toString()
-          .toLowerCase()
-          .indexOf(this.languageName.toLowerCase()) >= 0
-      })
-    }
   },
   mounted () {
     axios.get('/api/languages').then(response => {
@@ -50,3 +36,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  @import "~vue-select/dist/vue-select.css";
+</style>

@@ -146,16 +146,16 @@ export default {
       this.generateReport()
     },
     generateWarnMessage (reportsToWarn) {
+      console.log(reportsToWarn)
       let warnMessage = ''
       for (const report of reportsToWarn) {
         if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
-          if (reportsToWarn.length === 1) {
+          if (reportsToWarn.length === 1)
             warnMessage += ' ' + report.name
-            continue
-          }
-          warnMessage += ' and ' + report.name
-        }
-        warnMessage += ' ' + report.name + ','
+          else
+            warnMessage += ' and ' + report.name
+        } else
+          warnMessage += ' ' + report.name + ','
       }
       return warnMessage
     },
@@ -182,7 +182,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/reports').then(response => {
+    axios.get('/api/report-types').then(response => {
       this.reports = response.data
     })
     // send mindates over in same object as reports

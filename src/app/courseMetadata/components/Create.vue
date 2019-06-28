@@ -67,7 +67,7 @@
 
               <div class="field" v-if="!reqMaxEstimatedTime">
                 <p class="control">
-                  <button class="button is-text" @click.prevent="reqMaxEstimatedTime = true">Enter max estimated time</button>
+                  <button class="button is-text" @click.prevent="reqMaxEstimatedTime = true">Enter max estimated time (optional)</button>
                 </p>
               </div>
 
@@ -132,10 +132,12 @@
                 </p>
               </div>
             </form>
-            <button class="button is-link" v-clipboard="() => output">
-              Copy to clipboard
-            </button>
-            <pre>{{ output }}</pre>
+            <div class="code-wrapper" v-if="output != ''">
+              <button class="button is-text" v-clipboard="() => output">
+                Copy
+              </button>
+              <pre>{{ output }}</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -479,10 +481,20 @@ export default {
 </script>
 
 <style scoped>
+  @import "~vue-select/dist/vue-select.css";
   .tab-content {
     border-left: 1px solid #dbdbdb;
     border-right: 1px solid #dbdbdb;
     border-bottom: 1px solid #dbdbdb;
     border-radius: 5px;
+  }
+  .code-wrapper {
+    position: relative;
+    margin-top: 2.5rem;
+  }
+  .code-wrapper button {
+    position: absolute;
+    right: 0;
+    z-index: initial;
   }
 </style>

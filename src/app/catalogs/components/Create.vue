@@ -51,9 +51,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/reports').then(response => {
-      this.reports = response.data
-    })
+
   }
 }
 </script>
