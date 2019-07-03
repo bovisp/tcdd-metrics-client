@@ -19,6 +19,7 @@
               <router-link class="navbar-item" :to="{ name: 'catalogs' }" >Generate Catalog</router-link>
               <router-link class="navbar-item" :to="{ name: 'courseMetadata' }" >Generate Course Metadata</router-link>
               <router-link class="navbar-item" :to="{ name: 'pdf' }" >PDF</router-link>
+              <router-link class="navbar-item" :to="{ name: 'webinarAttendance' }" >Webinar</router-link>
             </div>
 
             <div class="navbar-end">

@@ -150,12 +150,8 @@ export default {
       let warnMessage = ''
       for (const report of reportsToWarn) {
         if (reportsToWarn.indexOf(report) === reportsToWarn.length - 1) {
-          if (reportsToWarn.length === 1)
-            warnMessage += ' ' + report.name
-          else
-            warnMessage += ' and ' + report.name
-        } else
-          warnMessage += ' ' + report.name + ','
+          if (reportsToWarn.length === 1) { warnMessage += ' ' + report.name } else { warnMessage += ' and ' + report.name }
+        } else { warnMessage += ' ' + report.name + ',' }
       }
       return warnMessage
     },

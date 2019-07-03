@@ -9,5 +9,6 @@ import reports from './reports/routes'
 import catalogs from './catalogs/routes'
 import courseMetadata from './courseMetadata/routes'
 import pdf from './pdf/routes'
+import webinars from './webinars/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...courseMetadata, ...pdf, ...timeline, ...errors]
+export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...courseMetadata, ...pdf, ...webinars, ...timeline, ...errors]
