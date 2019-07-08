@@ -28,7 +28,7 @@
               <p class="content has-text-centered"><strong>{{file.name}}</strong></p>
               <b-tabs v-model="activeTab[i]" v-if="dropFiles.length" position="is-centered" size="is-medium" class="block">
                 <b-tab-item label="Completions">
-                    
+
                     <div class="columns" v-if="completionIncorrectModulesTitlesFr[i].length">
                       <h2 class="title column is-5 is-offset-1">Original Title</h2>
                       <h2 class="title column is-5">Suggested Title</h2>
@@ -41,7 +41,7 @@
                     </div>
                 </b-tab-item>
                 <b-tab-item label="Accesses">
-                  
+
                     <div class="columns" v-if="accessIncorrectModulesTitlesFr[i].length">
                       <h2 class="title column is-5 is-offset-1">Original Title</h2>
                       <h2 class="title column is-5">Suggested Title</h2>
@@ -52,7 +52,7 @@
                         <b-input v-model="accessSuggestedModuleTitlesFr[i][j]"></b-input>
                       </b-field>
                     </div>
-                  
+
                 </b-tab-item>
               </b-tabs>
             </div>
@@ -94,7 +94,7 @@ export default {
         maxPatternLength: 200,
         minMatchCharLength: 1,
         keys: [
-          "title"
+          'title'
         ]
       },
       fuse: null
@@ -102,50 +102,48 @@ export default {
   },
   methods: {
     submitFiles () {
-        for(let i = 0; i < this.dropFiles.length; i++) {
-          
+      for (let i = 0; i < this.dropFiles.length; i++) {
+        let formData = new FormData()
+        formData.append('file', this.dropFiles[i])
+        axios.post('http://localhost:8000/api/comet-uploads', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(response => {
+          // comet completions
+          this.cometCompletions.push([])
+          this.completionIncorrectModulesTitlesFr.push([])
+          this.completionSuggestedModuleTitlesFr.push([])
+          this.cometCompletions[i] = response.data[0].flat()
+          this.completionAllModuleTitlesFr[i] = this.cometCompletions[i]
+            .filter(row => row.Language === 'French')
+            .map(row => row.Module)
 
-            let formData = new FormData();
-            formData.append('file', this.dropFiles[i])
-            axios.post('http://localhost:8000/api/comet-uploads', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(response => {
-              // comet completions
-              this.cometCompletions.push([])
-              this.completionIncorrectModulesTitlesFr.push([])
-              this.completionSuggestedModuleTitlesFr.push([])
-              this.cometCompletions[i] = response.data[0].flat()
-              this.completionAllModuleTitlesFr[i] = this.cometCompletions[i]
-                .filter(row => row.Language === 'French')
-                .map(row => row.Module)
+          for (let j = 0; j < this.completionAllModuleTitlesFr[i].length; j++) {
+            let result = this.fuse.search(this.completionAllModuleTitlesFr[i][j])[0]
+            if (this.completionAllModuleTitlesFr[i][j] != result.title) {
+              this.completionIncorrectModulesTitlesFr[i].push(this.completionAllModuleTitlesFr[i][j])
+              this.completionSuggestedModuleTitlesFr[i].push(result.title)
+            }
+          }
+          // comet accesses
+          this.cometAccesses.push([])
+          this.accessIncorrectModulesTitlesFr.push([])
+          this.accessSuggestedModuleTitlesFr.push([])
+          this.cometAccesses[i] = response.data[1].flat()
+          this.accessAllModuleTitlesFr[i] = this.cometAccesses[i]
+            .filter(row => row.language === 'French')
+            .map(row => row.Module)
 
-              for(let j = 0; j < this.completionAllModuleTitlesFr[i].length; j++) {
-                let result = this.fuse.search(this.completionAllModuleTitlesFr[i][j])[0]
-                if(this.completionAllModuleTitlesFr[i][j] != result.title) {
-                  this.completionIncorrectModulesTitlesFr[i].push(this.completionAllModuleTitlesFr[i][j])
-                  this.completionSuggestedModuleTitlesFr[i].push(result.title)
-                }
-              }
-              // comet accesses
-              this.cometAccesses.push([])
-              this.accessIncorrectModulesTitlesFr.push([])
-              this.accessSuggestedModuleTitlesFr.push([])
-              this.cometAccesses[i] = response.data[1].flat()
-              this.accessAllModuleTitlesFr[i] = this.cometAccesses[i]
-                .filter(row => row.language === 'French')
-                .map(row => row.Module)
-
-              for(let j = 0; j < this.accessAllModuleTitlesFr[i].length; j++) {
-                let result = this.fuse.search(this.accessAllModuleTitlesFr[i][j])[0]
-                if(this.accessAllModuleTitlesFr[i][j] != result.title) {
-                  this.accessIncorrectModulesTitlesFr[i].push(this.accessAllModuleTitlesFr[i][j])
-                  this.accessSuggestedModuleTitlesFr[i].push(result.title)
-                }
-              }
-            })
-        }
+          for (let j = 0; j < this.accessAllModuleTitlesFr[i].length; j++) {
+            let result = this.fuse.search(this.accessAllModuleTitlesFr[i][j])[0]
+            if (this.accessAllModuleTitlesFr[i][j] != result.title) {
+              this.accessIncorrectModulesTitlesFr[i].push(this.accessAllModuleTitlesFr[i][j])
+              this.accessSuggestedModuleTitlesFr[i].push(result.title)
+            }
+          }
+        })
+      }
     },
     deleteDropFile (index) {
       this.dropFiles.splice(index, 1)
@@ -157,8 +155,7 @@ export default {
       for (let i = 0; i < this.dropFiles.length; i++) {
         this.cometCompletions[i].forEach(row => {
           for (let j = 0; j < this.completionIncorrectModulesTitlesFr[i].length; j++) {
-            if(row.Module === this.completionIncorrectModulesTitlesFr[i][j])
-              row.Module = this.completionSuggestedModuleTitlesFr[i][j]
+            if (row.Module === this.completionIncorrectModulesTitlesFr[i][j]) { row.Module = this.completionSuggestedModuleTitlesFr[i][j] }
           }
           delete row.topic
         })
@@ -168,8 +165,7 @@ export default {
       for (let i = 0; i < this.dropFiles.length; i++) {
         this.cometAccesses[i].forEach(row => {
           for (let j = 0; j < this.accessIncorrectModulesTitlesFr[i].length; j++) {
-            if(row.Module === this.accessIncorrectModulesTitlesFr[i][j])
-              row.Module = this.accessSuggestedModuleTitlesFr[i][j]
+            if (row.Module === this.accessIncorrectModulesTitlesFr[i][j]) { row.Module = this.accessSuggestedModuleTitlesFr[i][j] }
           }
           delete row.topic
         })

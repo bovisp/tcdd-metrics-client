@@ -4,10 +4,15 @@ import { isEmpty } from 'lodash'
 import localforage from 'localforage'
 import env from '../../../../env'
 
-axios.defaults.baseURL = env.baseURL
+if(process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = 'http://localhost:8000'
+} else {
+  axios.defaults.baseURL = 'http://msc-educ-smc.cmc.ec.gc.ca/tcdd-metrics'
+}
 
 export const register = async ({ dispatch }, { payload, context }) => {
   try {
+    console.log(axios.defaults.baseURL)
     let response = await axios.post('/api/register', payload)
 
     await dispatch('setToken', response.data.meta.token)

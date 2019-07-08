@@ -4,24 +4,24 @@
         <button class="button is-link">Print</button>
         <div class="columns">
           <div class="column">
-            <Chart :chartData="totalCometAccesses" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5CometAccesses" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalCometAccesses" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total COMET Modules Accessed (# Visits)' } }"></Chart>
+            <Chart :chartData="top5CometAccesses" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 COMET Modules Accessed (# Visits)' } }"></Chart>
 
-            <Chart :chartData="totalTPViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5TPViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalTPViews" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total Training Portal Courses Accessed (# Visits)' } }"></Chart>
+            <Chart :chartData="top5TPViews" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 Training Portal Courses Accessed (# Visits)' } }"></Chart>
 
-            <Chart :chartData="totalWebinarAttendance" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5WebinarAttendance" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalWebinarAttendance" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total Stay Connected Webinars Live Attendance (# Participants)' } }"></Chart>
+            <Chart :chartData="top5WebinarAttendance" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 Stay Connected Webinars Live Attendance (# Participants)' } }"></Chart>
           </div>
           <div class="column">
-            <Chart :chartData="totalCometCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5CometCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalCometCompletions" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total COMET Modules Quizzed (# Quizzes)' } }"></Chart>
+            <Chart :chartData="top5CometCompletions" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 Training Portal Courses Completed (# Completions)' } }"></Chart>
 
-            <Chart :chartData="totalTPCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5TPCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalTPCompletions" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total Training Portal Courses Completed (# Completions)' } }"></Chart>
+            <Chart :chartData="top5TPCompletions" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 Training Portal Courses Completed (# Completions)' } }"></Chart>
 
-            <Chart :chartData="totalWebinarViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
-            <Chart :chartData="top5WebinarViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="totalWebinarViews" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total Stay Connected Webinars Training Portal Access (# Visits)' } }"></Chart>
+            <Chart :chartData="top5WebinarViews" @chart:print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 Stay Connected Webinars Training Portal Access (# Visits)' } }"></Chart>
           </div>
         </div>
     </div>
@@ -31,6 +31,7 @@
 <script>
 import axios from 'axios'
 import Chart from '@/app/pdf/components/Chart'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import * as jsPDF from 'jspdf/dist/jspdf.debug'
 import { orderBy, groupBy } from 'lodash'
 
@@ -59,6 +60,14 @@ export default {
       top5WebinarViews: {},
       errors: {},
       chartOptions: {
+        plugins: {
+            datalabels: {
+                color: '#FFFFFF',
+                anchor: 'end',
+                align: 'start',
+                clamp: true
+            }
+        },
         scales: {
           yAxes: [{
             ticks: {
@@ -67,7 +76,11 @@ export default {
             stacked: true
           }],
           xAxes: [{
-            stacked: true
+            ticks: {
+              maxRotation: 0
+            },
+            stacked: true,
+            maxBarThickness: 150,
           }]
         }
       }
@@ -127,7 +140,6 @@ export default {
       let sumFrenchCometAccesses = this.rawCometAccesses.reduce((acc, curr) => acc + curr.frenchCompletions, 0)
 
       this.totalCometAccesses = {
-        labels: ['Total COMET Modules Accessed'],
         datasets: [
           {
             label: 'English',
@@ -144,9 +156,17 @@ export default {
 
       // top 5
       let top5CometAccesses = this.rawCometAccesses.slice(0, 5)
-      let labels = top5CometAccesses.map(row => row.englishTitle)
-      let englishData = top5CometAccesses.map(row => row.englishCompletions)
-      let frenchData = top5CometAccesses.map(row => row.frenchCompletions)
+      let labels = top5CometAccesses.map(row => row.englishTitle.substring(0,15) + '...')
+      let englishData = top5CometAccesses.map(row => {
+        if(row.englishCompletions > 0)
+          return row.englishCompletions
+        return null
+      })
+      let frenchData = top5CometAccesses.map(row => {
+        if(row.frenchCompletions > 0)
+          return row.frenchCompletions
+        return null
+      })
 
       this.top5CometAccesses = {
         labels: labels,
@@ -173,7 +193,6 @@ export default {
       let sumFrenchCometCompletions = this.rawCometCompletions.reduce((acc, curr) => acc + curr.frenchCompletions, 0)
 
       this.totalCometCompletions = {
-        labels: ['Total COMET Modules Quizzed'],
         datasets: [
           {
             label: 'English',
@@ -190,9 +209,17 @@ export default {
 
       // top 5
       let top5CometCompletions = this.rawCometCompletions.slice(0, 5)
-      let labels = top5CometCompletions.map(row => row.englishTitle)
-      let englishData = top5CometCompletions.map(row => row.englishCompletions)
-      let frenchData = top5CometCompletions.map(row => row.frenchCompletions)
+      let labels = top5CometCompletions.map(row => row.englishTitle.substring(0,15) + '...')
+      let englishData = top5CometCompletions.map(row => {
+        if(row.englishCompletions > 0)
+          return row.englishCompletions
+        return null
+      })
+      let frenchData = top5CometCompletions.map(row => {
+        if(row.frenchCompletions > 0)
+          return row.frenchCompletions
+        return null
+      })
 
       this.top5CometCompletions = {
         labels: labels,
@@ -217,12 +244,11 @@ export default {
 
       // total
       let sumTPViews = this.rawTPViews.reduce((acc, curr) => acc + curr.views, 0)
-      
+
       let rawWebinarViews = this.rawTPViews.filter(row => row.english_category_name.toLowerCase() === `stay connected`)
       let sumWebinarViews = rawWebinarViews.reduce((acc, curr) => acc + curr.views, 0)
 
       this.totalTPViews = {
-        labels: ['Total Training Portal Courses Accessed'],
         datasets: [
           {
             label: 'Total',
@@ -233,7 +259,6 @@ export default {
       }
 
       this.totalWebinarViews = {
-        labels: ['Total Webinar Views'],
         datasets: [
           {
             label: 'Total',
@@ -245,7 +270,7 @@ export default {
 
       // top 5
       let top5TPViews = this.rawTPViews.slice(0, 5)
-      let labels = top5TPViews.map(row => row.english_course_name)
+      let labels = top5TPViews.map(row => row.english_course_name.substring(0,15) + '...')
       let data = top5TPViews.map(row => row.views)
 
       this.top5TPViews = {
@@ -260,7 +285,7 @@ export default {
       }
 
       let top5WebinarViews = rawWebinarViews.slice(0, 5)
-      let labelsWeb = top5WebinarViews.map(row => row.english_course_name)
+      let labelsWeb = top5WebinarViews.map(row => row.english_course_name.substring(0,15) + '...')
       let dataWeb = top5WebinarViews.map(row => row.views)
 
       this.top5WebinarViews = {
@@ -288,7 +313,6 @@ export default {
         .reduce((acc, curr) => acc + curr.completions, 0)
 
       this.totalTPCompletions = {
-        labels: ['Total Training Portal Courses Completed'],
         datasets: [
           {
             label: 'English',
@@ -317,24 +341,24 @@ export default {
       }], 'desc')
 
       let top5TPCompletions = groupedTPCompletions.slice(0, 5)
-      let labels = top5TPCompletions.map(row => row[0].english_course_name)
+      let labels = top5TPCompletions.map(row => row[0].english_course_name.substring(0,15) + '...')
 
       let englishData = top5TPCompletions.map(row => {
         let englishCourse = row.filter(x => x.Language && x.Language.toLowerCase() === 'english')
         if (englishCourse.length) { return englishCourse[0].completions }
-        return 0
+        return null
       })
 
       let frenchData = top5TPCompletions.map(row => {
         let frenchCourse = row.filter(x => x.Language && x.Language.toLowerCase() === 'french')
         if (frenchCourse.length) { return frenchCourse[0].completions }
-        return 0
+        return null
       })
 
       let nullLangData = top5TPCompletions.map(row => {
         let nullLangCourse = row.filter(x => !x.Language)
         if (nullLangCourse.length) { return nullLangCourse[0].completions }
-        return 0
+        return null
       })
 
       this.top5TPCompletions = {
@@ -368,7 +392,6 @@ export default {
         .reduce((acc, curr) => acc + curr.attendees, 0)
 
       this.totalWebinarAttendance = {
-        labels: ['Total Stay Connected Webinars Live Attendance (# Participants)'],
         datasets: [
           {
             label: 'English',
@@ -400,7 +423,7 @@ export default {
             ? webinar.filter(x => x.language_name.toLowerCase() === 'french')[0].attendees : 'undefined'
         }
       })
-      let labels = webinarAttendance.map(x => x.fullname)
+      let labels = webinarAttendance.map(x => x.fullname.substring(0,15) + '...')
       let englishData = webinarAttendance.map(x => x.english_attendees)
       let frenchData = webinarAttendance.map(x => x.french_attendees)
 
