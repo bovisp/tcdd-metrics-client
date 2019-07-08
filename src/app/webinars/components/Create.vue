@@ -76,19 +76,19 @@ export default {
         this.toast('dark', 'Please select a webinar.')
         return
       }
-      else if (!Object.keys(this.selectedLanguage).length) {
+      if (!Object.keys(this.selectedLanguage).length) {
         this.toast('dark', 'Please select a language.')
         return
       }
-      else if (!this.attendees) {
+      if (!this.attendees) {
         this.toast('dark', 'Please enter number of attendees.')
         return
       }
-      else if (this.attendees - this.attendees !== 0) {
+      if (this.attendees - this.attendees !== 0) {
         this.toast('dark', 'Attendees must be a number.')
         return
       }
-      let data ={
+      let data = {
         course_id: this.selectedWebinar.id,
         language_id: this.selectedLanguage.id,
         attendees: this.attendees
@@ -98,6 +98,8 @@ export default {
         setTimeout((function () {
           this.$router.replace({ name: 'webinarAttendance' })
         }.bind(this)), 1000)
+      }).catch(error => {
+        this.toast('danger', error.response.data)
       })
     },
     toast (type = 'dark', message) {

@@ -19,6 +19,9 @@
 
             <Chart :chartData="totalTPCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
             <Chart :chartData="top5TPCompletions" @chart:print="handlePrint" :options="chartOptions"></Chart>
+
+            <Chart :chartData="totalWebinarViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
+            <Chart :chartData="top5WebinarViews" @chart:print="handlePrint" :options="chartOptions"></Chart>
           </div>
         </div>
     </div>
@@ -52,6 +55,8 @@ export default {
       rawWebinarAttendance: {},
       totalWebinarAttendance: {},
       top5WebinarAttendance: {},
+      totalWebinarViews: {},
+      top5WebinarViews: {},
       errors: {},
       chartOptions: {
         scales: {
@@ -212,6 +217,9 @@ export default {
 
       // total
       let sumTPViews = this.rawTPViews.reduce((acc, curr) => acc + curr.views, 0)
+      
+      let rawWebinarViews = this.rawTPViews.filter(row => row.english_category_name.toLowerCase() === `stay connected`)
+      let sumWebinarViews = rawWebinarViews.reduce((acc, curr) => acc + curr.views, 0)
 
       this.totalTPViews = {
         labels: ['Total Training Portal Courses Accessed'],
@@ -220,6 +228,17 @@ export default {
             label: 'Total',
             backgroundColor: '#7D4A7E',
             data: [sumTPViews]
+          }
+        ]
+      }
+
+      this.totalWebinarViews = {
+        labels: ['Total Webinar Views'],
+        datasets: [
+          {
+            label: 'Total',
+            backgroundColor: '#7D4A7E',
+            data: [sumWebinarViews]
           }
         ]
       }
@@ -236,6 +255,21 @@ export default {
             label: 'Total',
             backgroundColor: '#7D4A7E',
             data: data
+          }
+        ]
+      }
+
+      let top5WebinarViews = rawWebinarViews.slice(0, 5)
+      let labelsWeb = top5WebinarViews.map(row => row.english_course_name)
+      let dataWeb = top5WebinarViews.map(row => row.views)
+
+      this.top5WebinarViews = {
+        labels: labelsWeb,
+        datasets: [
+          {
+            label: 'Total',
+            backgroundColor: '#7D4A7E',
+            data: dataWeb
           }
         ]
       }
@@ -327,11 +361,9 @@ export default {
 
     axios.get('/api/webinar-attendance').then(response => {
       this.rawWebinarAttendance = response.data
-      console.log(response.data)
       // total
       let sumEnglishAttendance = this.rawWebinarAttendance.filter(x => x.language_name && x.language_name.toLowerCase() === 'english')
         .reduce((acc, curr) => acc + curr.attendees, 0)
-      console.log(sumEnglishAttendance)
       let sumFrenchAttendance = this.rawWebinarAttendance.filter(x => x.language_name && x.language_name.toLowerCase() === 'french')
         .reduce((acc, curr) => acc + curr.attendees, 0)
 

@@ -8,7 +8,24 @@ import multilingualCourses from './multilingualCourses/routes'
 import reports from './reports/routes'
 import catalogs from './catalogs/routes'
 import courseMetadata from './courseMetadata/routes'
-import pdf from './pdf/routes'
+import charts from './charts/routes'
 import webinars from './webinars/routes'
+import catalogBlacklist from './catalogBlacklist/routes'
+import cometUpload from './cometUpload/routes'
 
-export default [...home, ...auth, ...badgeLanguages, ...courseLanguages, ...multilingualCourses, ...reports, ...catalogs, ...courseMetadata, ...pdf, ...webinars, ...timeline, ...errors]
+export default [
+  ...home,
+  ...auth,
+  ...badgeLanguages,
+  ...courseLanguages,
+  ...multilingualCourses,
+  ...reports,
+  ...catalogs,
+  ...courseMetadata,
+  ...charts,
+  ...webinars,
+  ...catalogBlacklist,
+  ...cometUpload,
+  ...timeline,
+  ...errors
+]

@@ -40,30 +40,27 @@
     </div>
 
     <!-- edit modal -->
-    <b-modal :active.sync="isUpdateModalActive" :width="640" scroll="keep">
+    <b-modal :active.sync="isUpdateModalActive" :width="640" scroll="keep" @close="englishAttendees = null; frenchAttendees = null">
       <div class="card">
         <div class="card-content">
           <form v-on:submit.prevent="submit">
             <div class="field">
-              <label class="label">Course</label>
+              <label class="label">Webinar</label>
               <p>{{ selected.fullname }}</p>
             </div>
-            <div class="field">
-              <label class="label">Language</label>
-              <div class="control">
-                <b-select v-model="selectedLanguage">
-                  <option
-                    v-for="language in languages"
-                    :value="language"
-                    :key="language.id">
-                    {{ language.name }}
-                  </option>
-                </b-select>
+            <div class="columns">
+              <div class="column">
+                <b-field label="English Attendees">
+                  <input class="input" type="number" v-model="englishAttendees" pattern="[0-9]">
+                </b-field>
+                <b-field>
+                  <button class="button is-link">Update</button>
+                </b-field>
               </div>
-            </div>
-            <div class="field">
-              <div class="control">
-                <button class="button is-link">Update</button>
+              <div class="column">
+                <b-field label="French Attendees">
+                  <input class="input" type="number" v-model="frenchAttendees" pattern="[0-9]">
+                </b-field>
               </div>
             </div>
           </form>
@@ -83,12 +80,13 @@ export default {
       isUpdateModalActive: false,
       languages: [],
       data: [],
-      selected: {},
-      submitData: {
+      selected: {
         course_id: null,
-        language_id: null
+        english_attendees: null,
+        french_attendees: null
       },
-      selectedLanguage: null,
+      updateEnglishAttendees: null,
+      updateFrenchAttendees: null,
       columns: [
         {
           field: 'fullname',
@@ -105,6 +103,24 @@ export default {
       ]
     }
   },
+  computed: {
+    englishAttendees: {
+      get: function () {
+        return this.selected.english_attendees
+      },
+      set: function (newValue) {
+        this.updateEnglishAttendees = newValue
+      }
+    },
+    frenchAttendees: {
+      get: function () {
+        return this.selected.french_attendees
+      },
+      set: function (newValue) {
+        this.updateFrenchAttendees = newValue
+      }
+    }
+  },
   mounted () {
     this.init()
   },
@@ -114,11 +130,12 @@ export default {
         let groupedData = Object.values(groupBy(response.data, 'course_id'))
         groupedData = groupedData.map(webinar => {
           return {
+            course_id: webinar[0].course_id,
             fullname: webinar[0].english_course_name + ' / ' + webinar[0].french_course_name,
-            english_attendees: webinar.filter(x => x.language_name.toLowerCase() === 'english')[0] ? 
-                               webinar.filter(x => x.language_name.toLowerCase() === 'english')[0].attendees : 'undefined',
-            french_attendees: webinar.filter(x => x.language_name.toLowerCase() === 'french')[0] ? 
-                              webinar.filter(x => x.language_name.toLowerCase() === 'french')[0].attendees : 'undefined'
+            english_attendees: webinar.filter(x => x.language_name.toLowerCase() === 'english')[0]
+              ? webinar.filter(x => x.language_name.toLowerCase() === 'english')[0].attendees : 'undefined',
+            french_attendees: webinar.filter(x => x.language_name.toLowerCase() === 'french')[0]
+              ? webinar.filter(x => x.language_name.toLowerCase() === 'french')[0].attendees : 'undefined'
           }
         })
         this.data = orderBy(groupedData, 'fullname', 'asc')
@@ -139,41 +156,39 @@ export default {
     },
     confirmDelete () {
       this.$dialog.confirm({
-        message: 'Do you really want to delete this course\'s language?',
+        message: `Do you really want to delete this webinar's attendance records?`,
         type: 'is-danger',
         onConfirm: () => this.deleteOnConfirm()
       })
     },
     deleteOnConfirm () {
-      if (!this.selected.id) {
-        this.toast('dark', 'Please select a course.')
+      if (!this.selected.course_id) {
+        this.toast('dark', 'Please select a webinar.')
         return
       }
-      axios.delete(`/api/course-languages/${this.selected.id}`).then(response => {
+      axios.delete(`/api/webinar-attendance/${this.selected.course_id}`).then(response => {
         this.toast('success', response.data)
         this.refreshTable()
       }).catch(error => {
         this.$dialog.alert({
-          message: error.response.data,
+          message: error,
           type: 'is-danger'
         })
       })
     },
     submit (e) {
-      if (!this.selectedLanguage) {
-        this.toast('dark', 'Please select a language.')
-        return
-      }
-      this.submitData.course_id = this.selected.course_id
-      this.submitData.language_id = this.selectedLanguage.id
-      axios.put(`/api/course-languages/${this.selected.id}`, this.submitData).then(response => {
+      let submitData = {}
+      submitData.english_attendees = this.updateEnglishAttendees ? this.updateEnglishAttendees : this.selected.english_attendees
+      submitData.french_attendees = this.updateFrenchAttendees ? this.updateFrenchAttendees : this.selected.french_attendees
+
+      axios.put(`/api/webinar-attendance/${this.selected.course_id}`, submitData).then(response => {
         this.toast('success', response.data)
         setTimeout((function () {
           this.refreshTable()
           this.isUpdateModalActive = false
         }.bind(this)), 1000)
       }).catch(error => {
-        this.snackbar('warning', error.response.data)
+        this.snackbar('warning', error)
       })
     },
     toast (type = 'dark', message) {

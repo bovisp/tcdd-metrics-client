@@ -2,8 +2,9 @@ import axios from 'axios'
 import { setHttpToken } from '../../../helpers'
 import { isEmpty } from 'lodash'
 import localforage from 'localforage'
+import env from '../../../../env'
 
-axios.defaults.baseURL = 'http://localhost:8000'
+axios.defaults.baseURL = env.baseURL
 
 export const register = async ({ dispatch }, { payload, context }) => {
   try {

@@ -12,38 +12,81 @@
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start" >
-              <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }" v-if="authenticated">Badge Languages</router-link>
-              <router-link class="navbar-item" :to="{ name: 'courseLanguages' }" v-if="authenticated">Course Languages</router-link>
-              <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }" v-if="authenticated">Course Groups</router-link>
-              <router-link class="navbar-item" :to="{ name: 'reports' }" v-if="authenticated">Generate Report</router-link>
-              <router-link class="navbar-item" :to="{ name: 'catalogs' }" >Generate Catalog</router-link>
-              <router-link class="navbar-item" :to="{ name: 'courseMetadata' }" >Generate Course Metadata</router-link>
-              <router-link class="navbar-item" :to="{ name: 'pdf' }" >PDF</router-link>
-              <router-link class="navbar-item" :to="{ name: 'webinarAttendance' }" >Webinar</router-link>
             </div>
 
             <div class="navbar-end">
-              <template v-if="!authenticated">
-                <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
-                <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
-              </template>
+              <b-dropdown
+                v-model="navigation"
+                position="is-bottom-left"
+                aria-role="menu">
+                <a
+                  class="navbar-item"
+                  slot="trigger"
+                  role="button">
+                  <span>Menu</span>
+                  <b-icon icon="menu-down"></b-icon>
+                </a>
+                  <template v-if="authenticated">
+                    <b-dropdown-item aria-role="menuitem">
+                      <p v-if="user !== null">
+                        Logged in: {{ user.name }}
+                      </p>
+                    </b-dropdown-item>
+                  </template>
 
-              <template v-else>
-                  <!-- <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link> -->
+                <template v-if="!authenticated">
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
+                  </b-dropdown-item>
+                </template>
+                <hr class="dropdown-divider" aria-role="menuitem">
 
-                  <div class="navbar-item has-dropdown is-hoverable">
-                      <a v-if="user !== null" class="navbar-link">
-                      {{ user.name }}
-                      </a>
+                <template v-if="authenticated">
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'badgeLanguages' }">Badge Languages</router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'courseLanguages' }">Course Languages</router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'multilingualCourses' }">Course Groups</router-link>
+                  </b-dropdown-item>
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <router-link class="navbar-item" :to="{ name: 'reports' }">Generate Report</router-link>
+                  </b-dropdown-item>
+                </template>
 
-                      <div class="navbar-dropdown is-right">
-                      <a class="navbar-item" @click.prevent="signout">
-                          Logout
-                      </a>
-                      </div>
-                  </div>
-              </template>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'catalogs' }" >Generate Catalog</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'courseMetadata' }" >Generate Course Metadata</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'charts' }" >Charts</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'webinarAttendance' }" >Webinar Attendance</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'catalogBlacklist' }" >Catalog Blacklist</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'cometUpload' }" >COMET Upload</router-link>
+                </b-dropdown-item>
 
+                <template v-if="authenticated">
+                  <hr class="dropdown-divider" aria-role="menuitem">
+                  <b-dropdown-item has-link aria-role="menuitem">
+                    <a class="navbar-item" @click.prevent="signout">
+                      Logout
+                    </a>
+                  </b-dropdown-item>
+                </template>
+              </b-dropdown>
             </div>
         </div>
     </nav>
