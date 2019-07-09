@@ -156,7 +156,7 @@ export default {
 
       // top 5
       let top5CometAccesses = this.rawCometAccesses.slice(0, 5)
-      let labels = top5CometAccesses.map(row => row.englishTitle.substring(0,15) + '...')
+      let labels = top5CometAccesses.map(row => [[row.englishTitle.substring(0,17)],[row.englishTitle.substring(17,34)],[row.englishTitle.substring(34,51)]])
       let englishData = top5CometAccesses.map(row => {
         if(row.englishCompletions > 0)
           return row.englishCompletions
@@ -209,7 +209,7 @@ export default {
 
       // top 5
       let top5CometCompletions = this.rawCometCompletions.slice(0, 5)
-      let labels = top5CometCompletions.map(row => row.englishTitle.substring(0,15) + '...')
+      let labels = top5CometCompletions.map(row => [[row.englishTitle.substring(0,17)],[row.englishTitle.substring(17,34)],[row.englishTitle.substring(34,51)]])
       let englishData = top5CometCompletions.map(row => {
         if(row.englishCompletions > 0)
           return row.englishCompletions
@@ -270,7 +270,7 @@ export default {
 
       // top 5
       let top5TPViews = this.rawTPViews.slice(0, 5)
-      let labels = top5TPViews.map(row => row.english_course_name.substring(0,15) + '...')
+      let labels = top5TPViews.map(row => [[row.english_course_name.substring(0,17)],[row.english_course_name.substring(17,34)],[row.english_course_name.substring(34,51)]])
       let data = top5TPViews.map(row => row.views)
 
       this.top5TPViews = {
@@ -285,7 +285,7 @@ export default {
       }
 
       let top5WebinarViews = rawWebinarViews.slice(0, 5)
-      let labelsWeb = top5WebinarViews.map(row => row.english_course_name.substring(0,15) + '...')
+      let labelsWeb = top5WebinarViews.map(row => [[row.english_course_name.substring(0,17)],[row.english_course_name.substring(17,34)],[row.english_course_name.substring(34,51)]])
       let dataWeb = top5WebinarViews.map(row => row.views)
 
       this.top5WebinarViews = {
@@ -341,7 +341,7 @@ export default {
       }], 'desc')
 
       let top5TPCompletions = groupedTPCompletions.slice(0, 5)
-      let labels = top5TPCompletions.map(row => row[0].english_course_name.substring(0,15) + '...')
+      let labels = top5TPCompletions.map(row => [[row[0].english_course_name.substring(0,17)],[row[0].english_course_name.substring(17,34)],[row[0].english_course_name.substring(34,51)]])
 
       let englishData = top5TPCompletions.map(row => {
         let englishCourse = row.filter(x => x.Language && x.Language.toLowerCase() === 'english')
@@ -423,7 +423,7 @@ export default {
             ? webinar.filter(x => x.language_name.toLowerCase() === 'french')[0].attendees : 'undefined'
         }
       })
-      let labels = webinarAttendance.map(x => x.fullname.substring(0,15) + '...')
+      let labels = webinarAttendance.map(row => [[row.fullname.substring(0,17)],[row.fullname.substring(17,34)],[row.fullname.substring(34,51)]])
       let englishData = webinarAttendance.map(x => x.english_attendees)
       let frenchData = webinarAttendance.map(x => x.french_attendees)
 

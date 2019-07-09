@@ -39,7 +39,7 @@
                     <router-link class="navbar-item" :to="{ name: 'login' }">Login</router-link>
                   </b-dropdown-item>
                   <b-dropdown-item has-link aria-role="menuitem">
-                    <router-link class="navbar-item" :to="{ path: 'register' }" append>Register</router-link>
+                    <router-link class="navbar-item" :to="{ name: 'register' }">Register</router-link>
                   </b-dropdown-item>
                 </template>
                 <hr class="dropdown-divider" aria-role="menuitem">

@@ -12,7 +12,6 @@ if(process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development')
 
 export const register = async ({ dispatch }, { payload, context }) => {
   try {
-    console.log(axios.defaults.baseURL)
     let response = await axios.post('/api/register', payload)
 
     await dispatch('setToken', response.data.meta.token)

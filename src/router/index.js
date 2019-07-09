@@ -5,9 +5,17 @@ import beforeEach from './beforeEach'
 
 Vue.use(Router)
 
+let routerBase = ''
+if(process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development') {
+  routerBase = ''
+} else {
+  routerBase = '/metrics/'
+}
+
 const router = new Router({
   routes,
-  mode: 'history'
+  mode: 'history',
+  base: routerBase
 })
 
 router.beforeEach(beforeEach)

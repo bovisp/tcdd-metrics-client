@@ -90,27 +90,60 @@
               </div>
               </b-tab-item>
                 <b-tab-item label="Objectives">
-              <label class="label">Objectives (English)</label>
-              <div class="field" v-for="(objective, index) in objectivesEn">
-                <p class="control">
-                  <input class="input" type="text" v-model="objectivesEn[index]">
-                </p>
-              </div>
+                  <div class="block">
+                    <b-radio v-model="radio"
+                        native-value="Objectives">
+                        Objectives
+                    </b-radio>
+                    <b-radio v-model="radio"
+                        native-value="Topics Covered">
+                        Topics Covered
+                    </b-radio>
+                  </div>
+                  <template v-if="radio.toLowerCase() === 'objectives'">
+                    <label class="label">Objectives (English)</label>
+                    <div class="field" v-for="(objective, index) in objectivesEn">
+                      <p class="control">
+                        <input class="input" type="text" v-model="objectivesEn[index]">
+                      </p>
+                    </div>
 
-              <label class="label">Objectives (French)</label>
-              <div class="field" v-for="(objective, index) in objectivesFr">
-                <p class="control">
-                  <input class="input" type="text" v-model="objectivesFr[index]">
-                </p>
-              </div>
+                    <label class="label">Objectives (French)</label>
+                    <div class="field" v-for="(objective, index) in objectivesFr">
+                      <p class="control">
+                        <input class="input" type="text" v-model="objectivesFr[index]">
+                      </p>
+                    </div>
 
-              <div class="field">
-                <p class="control">
-                  <button class="button is-text" @click.prevent="addMoreObjectives">Add more objectives</button>
-                </p>
-              </div>
+                    <div class="field">
+                      <p class="control">
+                        <button class="button is-text" @click.prevent="addMoreObjectives">Add more objectives</button>
+                      </p>
+                    </div>
+                  </template>
+                  <template v-if="radio.toLowerCase() === 'topics covered'">
+                    <label class="label">Topics Covered (English)</label>
+                    <div class="field" v-for="(topic, index) in topicsEn">
+                      <p class="control">
+                        <input class="input" type="text" v-model="topicsEn[index]">
+                      </p>
+                    </div>
 
-                  </b-tab-item>
+                    <label class="label">Topics Covered (French)</label>
+                    <div class="field" v-for="(topic, index) in topicsFr">
+                      <p class="control">
+                        <input class="input" type="text" v-model="topicsFr[index]">
+                      </p>
+                    </div>
+
+                    <div class="field">
+                      <p class="control">
+                        <button class="button is-text" @click.prevent="addMoreTopics">Add more topics covered</button>
+                      </p>
+                    </div>
+                  </template>
+
+                </b-tab-item>
                 <b-tab-item label="Description">
                   <label class="label">Description (English)</label>
                   <div class="field">
@@ -217,6 +250,7 @@ export default {
   },
   data () {
     return {
+      radio: 'Objectives',
       activeTab: 0,
       languagesEn: [],
       languagesFr: [],
@@ -238,6 +272,8 @@ export default {
       reqMaxEstimatedTime: false,
       objectivesEn: ['', '', ''],
       objectivesFr: ['', '', ''],
+      topicsEn: ['', '', ''],
+      topicsFr: ['', '', ''],
       descriptionEn: '',
       descriptionFr: ''
     }
@@ -252,6 +288,11 @@ export default {
     addMoreObjectives () {
       this.objectivesEn.push(...['', '', ''])
       this.objectivesFr.push(...['', '', ''])
+    },
+
+    addMoreTopics () {
+      this.topicsEn.push(...['','',''])
+      this.topicsFr.push(...['','',''])
     },
 
     submit () {
@@ -290,8 +331,12 @@ export default {
         this.output += this.getEstimatedTime('en')
       }
 
-      if (this.objectivesEn.some(o => o !== '')) {
+      if (this.objectivesEn.some(o => o !== '' && this.radio.toLowerCase() === 'objectives')) {
         this.output += this.getObjectives('en')
+      }
+
+      if (this.topicsEn.some(o => o !== '' && this.radio.toLowerCase() === 'topics covered')) {
+        this.output += this.getTopics('en')
       }
 
       if (this.descriptionEn !== '') {
@@ -336,8 +381,12 @@ export default {
         this.output += this.getEstimatedTime('fr')
       }
 
-      if (this.objectivesFr.some(o => o !== '')) {
+      if (this.objectivesFr.some(o => o !== '' && this.radio.toLowerCase() === 'objectives')) {
         this.output += this.getObjectives('fr')
+      }
+
+      if (this.topicsFr.some(o => o !== '' && this.radio.toLowerCase() === 'topics covered')) {
+        this.output += this.getTopics('fr')
       }
 
       if (this.descriptionFr !== '') {
@@ -370,6 +419,39 @@ export default {
       output += `<div id="objectives-content">\n`
       output += `<ul>\n`
       this.objectivesEn.forEach(o => {
+        if (o !== '') {
+          output += `  <li>`
+          output += `${o}`
+          output += `</li>\n`
+        }
+      })
+      output += `</ul>\n`
+      output += `</div>\n`
+
+      return output
+    },
+
+    getTopics (lang) {
+      let output = ''
+      if (lang === 'fr') {
+        output += `<div id="topicscovered">Sujets abordés</div>\n`
+        output += `<div id="topicscovered-content">\n`
+        output += `<ul>\n`
+        this.topicsFr.forEach(o => {
+          if (o !== '') {
+            output += `  <li>`
+            output += `${o}`
+            output += `</li>\n`
+          }
+        })
+        output += `</ul>\n`
+        output += `</div>\n`
+        return output
+      }
+      output += `<div id="topicscovered">Topics Covered</div>\n`
+      output += `<div id="topicscovered-content">\n`
+      output += `<ul>\n`
+      this.topicsEn.forEach(o => {
         if (o !== '') {
           output += `  <li>`
           output += `${o}`
