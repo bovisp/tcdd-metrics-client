@@ -182,7 +182,7 @@ export default {
       this.reports = response.data
     })
     // send mindates over in same object as reports
-    axios.get('api/reports/minDateTimestamps').then(response => {
+    axios.get('/api/reports/minDateTimestamps').then(response => {
       let minDateVals = response.data.map(d => d[Object.keys(d)[0]])
       this.minDate = new Date(Math.min(...minDateVals) * 1000) // multiplies timestamp by 1000 for milliseconds and converts to date
       this.startDate = this.minDate

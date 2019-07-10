@@ -221,7 +221,7 @@ export default {
   },
   methods: {
     submit () {
-      axios.put('http://localhost:8000/api/comet-modules', this.cometCourses).then(response => {
+      axios.put('/api/comet-modules', this.cometCourses).then(response => {
         this.$toast.open({
           message: response.data,
           type: 'is-success'
@@ -285,7 +285,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8000/api/comet-modules').then(response => {
+    axios.get('/api/comet-modules').then(response => {
       this.cometCourses = response.data
     })
   }

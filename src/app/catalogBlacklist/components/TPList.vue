@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     submit () {
-      axios.put('http://localhost:8000/api/tp-modules', this.courses).then(response => {
+      axios.put('/api/tp-modules', this.courses).then(response => {
         this.$toast.open({
           message: response.data,
           type: 'is-success'
@@ -247,7 +247,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8000/api/tp-modules').then(response => {
+    axios.get('/api/tp-modules').then(response => {
       this.courses = response.data
     })
   }
