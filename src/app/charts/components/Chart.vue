@@ -9,14 +9,17 @@ export default {
   methods: {
     print () {
       // grab the canvas and generate an image
-      // let image = this.$refs.canvas.toDataURL()
+      this.$refs.canvas.toBlob(blob => {
+        this.$emit('print', {title: this.options.title.text, data: blob})
+      })
       // Emits an event with the image
-      this.$emit('chart:print')
     }
   },
   mounted () {
     this.renderChart(this.chartData, this.options)
-    this.print()
+    setTimeout(() => {
+      this.print()
+    }, 10000)
   }
 }
 </script>

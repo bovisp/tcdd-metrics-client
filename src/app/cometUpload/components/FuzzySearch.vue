@@ -102,10 +102,16 @@ export default {
   },
   methods: {
     submitFiles () {
+      if(process.env.NODE_ENV !== undefined && process.env.NODE_ENV === 'development') {
+        axios.defaults.baseURL = 'http://localhost:8000'
+      } else {
+        axios.defaults.baseURL = 'http://msc-educ-smc.cmc.ec.gc.ca/tcdd-metrics'
+      }
+
       for (let i = 0; i < this.dropFiles.length; i++) {
         let formData = new FormData()
         formData.append('file', this.dropFiles[i])
-        axios.post('http://localhost:8000/api/comet-uploads', formData, {
+        axios.post('/api/comet-uploads', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -172,8 +178,8 @@ export default {
         this.cometAccesses[i] = _.uniqWith(this.cometAccesses[i], _.isEqual)
       }
 
-      axios.post('http://localhost:8000/api/comet-completions', this.cometCompletions).then(response => {
-        axios.post('http://localhost:8000/api/comet-accesses', this.cometAccesses).then(response => {
+      axios.post('/api/comet-completions', this.cometCompletions).then(response => {
+        axios.post('/api/comet-accesses', this.cometAccesses).then(response => {
           this.$toast.open({
             message: response.data,
             type: 'is-success'
@@ -199,7 +205,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8000/api/correct-titles').then(response => {
+    axios.get('/api/correct-titles').then(response => {
       this.correctModuleTitlesFr = response.data
       this.fuse = new Fuse(this.correctModuleTitlesFr, this.fuseOptions)
     })

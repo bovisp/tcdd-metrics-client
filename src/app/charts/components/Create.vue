@@ -1,12 +1,11 @@
 <template>
   <section>
     <div class="field">
-        <button class="button is-link" @click.prevent="download">Download</button>
-        <b-tabs v-model="activeTab">
-          <b-tab-item label="English">
+        <button class="button is-link" @click.prevent="download" :disabled="images.length < 24">Download</button>
+        <h2 class="title">English</h2>
         <div class="columns">
           <div class="column">
-            <Chart :chartData="totalEnglishCometAccesses" @chart:print="console.log('here')" :options="{...chartOptions, title: { display: true, text: 'Total COMET Modules Accessed (# Visits)' } }"></Chart>
+            <Chart :chartData="totalEnglishCometAccesses" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total COMET Modules Accessed (# Visits)' } }"></Chart>
             <Chart :chartData="top5EnglishCometAccesses" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Top 5 COMET Modules Accessed (# Visits)' } }"></Chart>
 
             <Chart :chartData="totalEnglishTrainingPortalViews" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Total Training Portal Courses Accessed (# Visits)' } }"></Chart>
@@ -27,11 +26,10 @@
           </div>
         </div>
 
-          </b-tab-item>
-          <b-tab-item label="French">
+          <h2 class="title">French</h2>
             <div class="columns">
               <div class="column">
-                <Chart :chartData="totalFrenchCometAccesses" @chart:print="console.log('here')" :options="{...chartOptions, title: { display: true, text: 'Nombre total de modules COMET fréquentés (# visiteurs)' } }"></Chart>
+                <Chart :chartData="totalFrenchCometAccesses" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Nombre total de modules COMET fréquentés (# visiteurs)' } }"></Chart>
                 <Chart :chartData="top5FrenchCometAccesses" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Les 5 modules COMET les plus fréquentés (# visiteurs)' } }"></Chart>
 
                 <Chart :chartData="totalFrenchTrainingPortalViews" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Nombre total de cours du portail de formation fréquentés (# visiteurs)' } }"></Chart>
@@ -51,16 +49,14 @@
                 <Chart :chartData="top5FrenchWebinarViews" @print="handlePrint" :options="{...chartOptions, title: { display: true, text: 'Les 5 webinaires Restez-Branchés les plus fréquentés du portail de formation (# visiteurs)' } }"></Chart>
               </div>
             </div>
-          </b-tab-item>
 
-        </b-tabs>
     </div>
   </section>
 </template>
 
 <script>
 import axios from 'axios'
-import Chart from '@/app/pdf/components/Chart'
+import Chart from '@/app/charts/components/Chart'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import * as jsPDF from 'jspdf/dist/jspdf.debug'
 import { orderBy, groupBy } from 'lodash'
@@ -72,7 +68,6 @@ export default {
   },
   data () {
     return {
-      activeTab: 0,
       images: [],
       totalEnglishCometAccesses: {},
       totalFrenchCometAccesses: {},
@@ -158,7 +153,11 @@ export default {
     },
     download () {
       let zip = new JSZip();
-      zip.file("Hello.txt", "Hello World");
+      let charts = zip.folder("charts")
+
+      this.images.forEach((img) => {
+        charts.file(`${img.title}.png`, img.data, {base64: true})
+      })
       zip.generateAsync({type:"blob"}).then(content => {
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(content)
@@ -825,7 +824,6 @@ export default {
   mounted () {
     this.getEnglishChartData()
     this.getFrenchChartData()
-
     
   }
 }
