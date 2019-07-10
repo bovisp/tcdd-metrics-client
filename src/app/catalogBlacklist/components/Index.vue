@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="container">
-    <section class="section">
       <b-tabs position="is-centered" class="block" size="is-large">
         <b-tab-item label="COMET">
           <CometList/>
@@ -9,7 +8,6 @@
           <TPList/>
         </b-tab-item>
       </b-tabs>
-    </section>
   </div>
 </template>
 

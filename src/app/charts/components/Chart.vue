@@ -9,14 +9,14 @@ export default {
   methods: {
     print () {
       // grab the canvas and generate an image
-      let image = this.$refs.canvas
+      // let image = this.$refs.canvas.toDataURL()
       // Emits an event with the image
-      this.$emit('chart:print', image.toDataURL())
+      this.$emit('chart:print')
     }
   },
   mounted () {
     this.renderChart(this.chartData, this.options)
-    // this.print()
+    this.print()
   }
 }
 </script>

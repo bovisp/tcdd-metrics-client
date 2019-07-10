@@ -16,7 +16,6 @@
 
             <div class="navbar-end">
               <b-dropdown
-                v-model="navigation"
                 position="is-bottom-left"
                 aria-role="menu">
                 <a
