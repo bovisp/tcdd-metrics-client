@@ -2,7 +2,8 @@
     <section>
         <div class="columns">
             <div class="column" style="margin: 0 1rem 0 .5rem">
-                <h2 class="title">Excluded Modules</h2>
+                <h2 class="title" style="margin-bottom: 0rem">Excluded Modules</h2>
+                <p style="margin-bottom: 1rem">(from "Other Comet Modules of Interest")</p>
                 <b-field>
                     <b-input icon="magnify"
                         @keyup.native.esc="excludedSearchTerm = ''"
@@ -88,7 +89,8 @@
             </div>
 
             <div class="column" style="margin: 0 .5rem 0 1rem">
-                <h2 class="title">Included Modules</h2>
+                <h2 class="title" style="margin-bottom: 0rem">Included Modules</h2>
+                <p style="margin-bottom: 1rem">(in "Other Comet Modules of Interest")</p>
 
                 <b-field>
                     <b-input icon="magnify"

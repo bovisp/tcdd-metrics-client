@@ -64,6 +64,7 @@ import Chart from '@/app/pdf/components/Chart'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import * as jsPDF from 'jspdf/dist/jspdf.debug'
 import { orderBy, groupBy } from 'lodash'
+import JSZip from 'jszip'
 
 export default {
   components: {
@@ -156,6 +157,14 @@ export default {
 
     },
     download () {
+      let zip = new JSZip();
+      zip.file("Hello.txt", "Hello World");
+      zip.generateAsync({type:"blob"}).then(content => {
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(content)
+        link.download = 'example.zip'
+        link.click()
+      })
       // let data = {}
       // data.language_id = this.selectedLanguage.id
       // axios({

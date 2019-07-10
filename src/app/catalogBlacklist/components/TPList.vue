@@ -2,7 +2,8 @@
     <section>
         <div class="columns">
             <div class="column" style="margin: 0 1rem 0 .5rem">
-                <h2 class="title">Excluded Courses</h2>
+                <h2 class="title" style="margin-bottom: 0rem">Excluded Courses</h2>
+                <p style="margin-bottom: 1rem">(from "Other Resources")</p>
                 <b-field>
                     <b-input icon="magnify"
                         @keyup.native.esc="excludedSearchTerm = ''"
@@ -65,7 +66,8 @@
             </div>
 
             <div class="column" style="margin: 0 .5rem 0 1rem">
-                <h2 class="title">Included Courses</h2>
+                <h2 class="title" style="margin-bottom: 0rem">Included Courses</h2>
+                <p style="margin-bottom: 1rem">(in "Other Resources")</p>
 
                 <b-field>
                     <b-input icon="magnify"
