@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="field">
-        <button class="button is-link" @click.prevent="download" :disabled="images.length < 24">Download</button>
+        <button :class="[images.length < 24 ? 'is-loading' : '', 'button', 'is-link']" @click.prevent="download" :disabled="images.length < 24">Download</button>
         <h2 class="title">English</h2>
         <div class="columns">
           <div class="column">
