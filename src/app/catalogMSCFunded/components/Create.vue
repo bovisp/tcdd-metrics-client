@@ -1,9 +1,8 @@
 <template>
     <section>
         <div class="columns">
-            <div class="column" style="margin: 0 1rem 0 .5rem">
-                <h2 class="title" style="margin-bottom: 0rem">Excluded Modules</h2>
-                <p style="margin-bottom: 1rem">(from "Other Comet Modules of Interest")</p>
+            <div class="column" style="margin: 1rem 1rem 0 .5rem">
+                <h2 class="title" style="margin-bottom: 1rem">Other COMET Modules</h2>
                 <b-field>
                     <b-input icon="magnify"
                         @keyup.native.esc="excludedSearchTerm = ''"
@@ -77,7 +76,7 @@
                 </b-table>
             </div>
 
-            <div class="column is-narrow">
+            <div class="column is-narrow" style="margin-top: 1rem">
                 <button :disabled="!checkedIncludedCometCourses.length" @click.prevent="excludeCourse" class="button is-primary is-link" style="margin: 0 .5rem 0 0;"><b-icon icon="chevron-left"></b-icon></button>
                 <button :disabled="!checkedExcludedCometCourses.length" @click.prevent="includeCourse" class="button is-primary is-link" style="margin: 0 0 1rem 0;"><b-icon icon="chevron-right"></b-icon></button><br/>
                 <button @click.prevent="submit" class="button is-primary is-link" style="margin: 0 0 1rem 0;">Save</button><br>
@@ -88,10 +87,8 @@
                 <p>Add Other Language</p>
             </div>
 
-            <div class="column" style="margin: 0 .5rem 0 1rem">
-                <h2 class="title" style="margin-bottom: 0rem">Included Modules</h2>
-                <p style="margin-bottom: 1rem">(in "Other Comet Modules of Interest")</p>
-
+            <div class="column" style="margin: 1rem .5rem 0 1rem">
+                <h2 class="title" style="margin-bottom: 1rem">MSC-Funded COMET Modules</h2>
                 <b-field>
                     <b-input icon="magnify"
                         @keyup.native.esc="includedSearchTerm = ''"
@@ -176,8 +173,8 @@ export default {
   data () {
     return {
       addOtherLang: false,
-      excludedCourseLangGroup: ['english', 'french'],
-      includedCourseLangGroup: ['english', 'french'],
+      excludedCourseLangGroup: ["1", "2"],
+      includedCourseLangGroup: ["1", "2"],
       cometCourses: [],
       checkedIncludedCometCourses: [],
       checkedExcludedCometCourses: [],
@@ -190,7 +187,7 @@ export default {
   computed: {
     includedCometCourses: function () {
       return this.cometCourses
-        .filter(row => row.include_in_catalog)
+        .filter(row => row.msc_funded)
         .filter(row => {
           if (this.includedCourseLangGroup.length === 0) { return false }
           if (this.includedCourseLangGroup.length === 1) { return row.language_id == this.includedCourseLangGroup[0] }
@@ -205,7 +202,7 @@ export default {
     },
     excludedCometCourses: function () {
       return this.cometCourses
-        .filter(row => !row.include_in_catalog)
+        .filter(row => !row.msc_funded)
         .filter(row => {
           if (this.excludedCourseLangGroup.length === 0) { return false }
           if (this.excludedCourseLangGroup.length === 1) { return row.language_id == this.excludedCourseLangGroup[0] }
@@ -221,7 +218,7 @@ export default {
   },
   methods: {
     submit () {
-      axios.put('/api/comet-modules', this.cometCourses).then(response => {
+      axios.put('/api/comet-modules/msc-funded', this.cometCourses).then(response => {
         this.$toast.open({
           message: response.data,
           type: 'is-success'
@@ -241,10 +238,10 @@ export default {
         this.checkedExcludedCometCourses.forEach(c => {
           if (c.language_id === 1) {
             let frenchCourse = this.cometCourses.filter(course => course.english_version_id === c.id)[0]
-            if (frenchCourse && !frenchCourse.include_in_catalog) { this.checkedExcludedCometCourses.push(frenchCourse) }
+            if (frenchCourse && !frenchCourse.msc_funded) { this.checkedExcludedCometCourses.push(frenchCourse) }
           } else if (c.language_id === 2) {
             let englishCourse = this.cometCourses.filter(x => x.id === c.english_version_id)[0]
-            if (englishCourse && !englishCourse.include_in_catalog) { this.checkedExcludedCometCourses.push(englishCourse) }
+            if (englishCourse && !englishCourse.msc_funded) { this.checkedExcludedCometCourses.push(englishCourse) }
           }
         })
       }
@@ -252,7 +249,7 @@ export default {
       if (this.checkedExcludedCometCourses.length) {
         this.checkedExcludedCometCourses.forEach(x => {
           this.cometCourses.forEach(row => {
-            if (row.id === x.id) { row.include_in_catalog = true }
+            if (row.id === x.id) { row.msc_funded = true }
           })
         })
         this.checkedExcludedCometCourses = []
@@ -266,10 +263,10 @@ export default {
         this.checkedIncludedCometCourses.forEach(c => {
           if (c.language_id === 1) {
             let frenchCourse = this.cometCourses.filter(course => course.english_version_id === c.id)[0]
-            if (frenchCourse && frenchCourse.include_in_catalog) { this.checkedIncludedCometCourses.push(frenchCourse) }
+            if (frenchCourse && frenchCourse.msc_funded) { this.checkedIncludedCometCourses.push(frenchCourse) }
           } else if (c.language_id === 2) {
             let englishCourse = this.cometCourses.filter(x => x.id === c.english_version_id)[0]
-            if (englishCourse && englishCourse.include_in_catalog) { this.checkedIncludedCometCourses.push(englishCourse) }
+            if (englishCourse && englishCourse.msc_funded) { this.checkedIncludedCometCourses.push(englishCourse) }
           }
         })
       }
@@ -277,7 +274,7 @@ export default {
       if (this.checkedIncludedCometCourses.length) {
         this.checkedIncludedCometCourses.forEach(x => {
           this.cometCourses.forEach(row => {
-            if (row.id === x.id) { row.include_in_catalog = false }
+            if (row.id === x.id) { row.msc_funded = false }
           })
         })
         this.checkedIncludedCometCourses = []
@@ -285,7 +282,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('/api/comet-modules').then(response => {
+    axios.get('/api/comet-modules/msc-funded').then(response => {
       this.cometCourses = response.data
     })
   }

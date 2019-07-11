@@ -12,6 +12,7 @@ import charts from './charts/routes'
 import webinars from './webinars/routes'
 import catalogBlacklist from './catalogBlacklist/routes'
 import cometUpload from './cometUpload/routes'
+import catalogMSCFunded from './catalogMSCFunded/routes'
 
 export default [
   ...home,
@@ -26,6 +27,7 @@ export default [
   ...webinars,
   ...catalogBlacklist,
   ...cometUpload,
+  ...catalogMSCFunded,
   ...timeline,
   ...errors
 ]

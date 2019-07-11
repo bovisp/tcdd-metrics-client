@@ -74,6 +74,9 @@
                   <router-link class="navbar-item" :to="{ name: 'catalogBlacklist' }" >Catalog Blacklist</router-link>
                 </b-dropdown-item>
                 <b-dropdown-item has-link aria-role="menuitem">
+                  <router-link class="navbar-item" :to="{ name: 'catalogMSCFunded' }" >Catalog MSC-funded</router-link>
+                </b-dropdown-item>
+                <b-dropdown-item has-link aria-role="menuitem">
                   <router-link class="navbar-item" :to="{ name: 'cometUpload' }" >COMET Upload</router-link>
                 </b-dropdown-item>
 
