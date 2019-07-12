@@ -249,7 +249,10 @@ export default {
       if (this.checkedExcludedCometCourses.length) {
         this.checkedExcludedCometCourses.forEach(x => {
           this.cometCourses.forEach(row => {
-            if (row.id === x.id) { row.msc_funded = true }
+            if (row.id === x.id) { 
+              row.msc_funded = true
+              row.include_in_catalog = true
+            }
           })
         })
         this.checkedExcludedCometCourses = []
@@ -274,7 +277,10 @@ export default {
       if (this.checkedIncludedCometCourses.length) {
         this.checkedIncludedCometCourses.forEach(x => {
           this.cometCourses.forEach(row => {
-            if (row.id === x.id) { row.msc_funded = false }
+            if (row.id === x.id) { 
+              row.msc_funded = false
+              row.include_in_catalog = false
+            }
           })
         })
         this.checkedIncludedCometCourses = []
