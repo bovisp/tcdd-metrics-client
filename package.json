@@ -15,7 +15,7 @@
     "chartjs-plugin-datalabels": "^0.6.0",
     "fuse.js": "^3.4.5",
     "jspdf": "^1.5.3",
-    "jszip": "^3.2.2",
+    "jszip": "^3.7.0",
     "localforage": "^1.7.3",
     "moment": "^2.24.0",
     "v-clipboard": "^2.2.2",
